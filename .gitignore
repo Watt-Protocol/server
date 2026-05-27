@@ -1,0 +1,22 @@
+# dependencies (never commit)
+node_modules/
+**/node_modules/
+nodemodel/
+.env
+.env.*
+!.env.example
+
+.vercel/
+dist/
+coverage/
+*.log
+npm-debug.log*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# local generated data exports
+signups.csv

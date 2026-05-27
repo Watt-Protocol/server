@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="About $WATT Protocol — Born in Nigeria, built for the world. Our story, mission, and team.">
+<title>About — $WATT Protocol</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="About $WATT Protocol">
+<meta property="og:description" content="Born in Nigeria after a 36-hour power outage. The $WATT Protocol story, mission, team, and the vision for a world where clean energy earns income.">
+<meta property="og:url"         content="/about.html">
+<meta property="og:image"       content="/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height"content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="About $WATT Protocol">
+<meta name="twitter:description" content="Born in Nigeria after a 36-hour power outage. The story, mission, and team behind the global clean energy protocol.">
+<meta name="twitter:image"       content="/og-image.png">
+<!-- Canonical -->
+<link rel="canonical" href="/about.html">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-hero { padding: 160px 80px 100px; position: relative; overflow: hidden; }
+.page-hero-glow { position:absolute;top:0;right:0;width:500px;height:500px;background:radial-gradient(circle,rgba(245,230,66,0.05) 0%,transparent 70%);pointer-events:none; }
+
+/* Story */
+.story-section { padding: 100px 80px; background: var(--gray1); }
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+.story-num {
+  font-family: var(--font-display);
+  font-size: 200px;
+  color: rgba(245,230,66,0.04);
+  line-height: 1;
+  position: absolute;
+  top: -20px;
+  right: 20px;
+}
+.story-block { position: relative; overflow: hidden; }
+.story-block-inner { padding: 48px; background: var(--gray2); min-height: 280px; display: flex; flex-direction: column; justify-content: flex-end; }
+.story-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+.story-title { font-family: var(--font-display); font-size: 36px; color: var(--white); margin-bottom: 16px; letter-spacing: 1px; }
+.story-text { font-size: 14px; line-height: 1.85; color: var(--gray5); }
+
+/* Velion parent */
+.velion-section { padding: 100px 80px; }
+.velion-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.velion-logo-display {
+  background: var(--gray2);
+  border: 1px solid var(--border);
+  padding: 60px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.velion-logo-text { font-family: var(--font-display); font-size: 48px; letter-spacing: 6px; color: var(--white); }
+.velion-sub-text { font-family: var(--font-mono); font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gray4); }
+.velion-divider { width: 40px; height: 2px; background: var(--yellow); }
+.velion-watt { font-family: var(--font-display); font-size: 28px; letter-spacing: 3px; color: var(--yellow); }
+
+/* Values */
+.values-section { padding: 100px 80px; background: var(--gray1); }
+.values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
+.value-card { background: var(--gray2); padding: 40px 32px; border-bottom: 3px solid transparent; transition: border-color 0.3s; }
+.value-card:hover { border-bottom-color: var(--yellow); }
+.value-num { font-family: var(--font-display); font-size: 56px; color: rgba(245,230,66,0.08); margin-bottom: 16px; }
+.value-title { font-family: var(--font-display); font-size: 24px; color: var(--yellow); margin-bottom: 12px; letter-spacing: 1px; }
+.value-desc { font-size: 14px; line-height: 1.75; color: var(--gray5); }
+
+/* Roadmap */
+.roadmap-section { padding: 100px 80px; }
+.roadmap { display: flex; flex-direction: column; gap: 2px; margin-top: 60px; }
+.rm-item { background: var(--gray2); padding: 32px 40px; display: grid; grid-template-columns: 120px 1fr auto; gap: 40px; align-items: center; transition: background 0.3s; }
+.rm-item:hover { background: var(--gray3); }
+.rm-item.current { background: rgba(245,230,66,0.05); border-left: 3px solid var(--yellow); }
+.rm-phase { font-family: var(--font-display); font-size: 14px; letter-spacing: 2px; color: var(--orange); }
+.rm-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.rm-desc { font-size: 13px; color: var(--gray5); }
+.rm-date { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--gray4); white-space: nowrap; }
+.rm-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gray4); flex-shrink: 0; margin-right: 8px; }
+.rm-dot.active { background: var(--yellow); box-shadow: 0 0 12px rgba(245,230,66,0.5); }
+
+/* Team */
+.team-section { padding: 100px 80px; background: var(--gray1); }
+.team-coming {
+  background: var(--gray2);
+  border: 1px dashed rgba(245,230,66,0.2);
+  padding: 80px;
+  text-align: center;
+  margin-top: 60px;
+}
+.team-coming-icon { font-size: 34px; margin-bottom: 14px; }
+.team-coming-title { font-family: var(--font-display); font-size: 40px; color: var(--yellow); margin-bottom: 16px; letter-spacing: 1px; }
+.team-coming-desc { font-size: 15px; color: var(--gray5); max-width: 500px; margin: 0 auto 40px; line-height: 1.85; }
+.team-roles { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 48px; text-align: left; }
+.role-card { background: var(--gray3); padding: 28px; }
+.role-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.role-desc { font-size: 12px; color: var(--gray5); line-height: 1.6; }
+.role-badge { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-top: 12px; }
+
+/* Founder */
+.founder-section { padding: 100px 80px; }
+.founder-card { background: var(--gray2); padding: 60px; display: grid; grid-template-columns: 200px 1fr; gap: 60px; align-items: center; }
+.founder-avatar { width: 200px; height: 200px; background: var(--gray3); display: flex; align-items: center; justify-content: center; border: 2px solid var(--border); position: relative; }
+.founder-avatar-text { font-family: var(--font-display); font-size: 80px; color: var(--yellow); }
+.founder-badge { position: absolute; bottom: -8px; right: -8px; background: var(--yellow); padding: 4px 12px; font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--black); font-weight: 700; }
+.founder-name { font-family: var(--font-display); font-size: 40px; color: var(--white); margin-bottom: 6px; }
+.founder-role { font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--yellow); margin-bottom: 20px; }
+.founder-bio { font-size: 15px; line-height: 1.85; color: var(--gray5); }
+.founder-socials { display: flex; gap: 12px; margin-top: 24px; }
+.f-soc-link { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray5); border: 1px solid var(--border); padding: 8px 16px; transition: all 0.3s; }
+.f-soc-link:hover { border-color: var(--yellow); color: var(--yellow); }
+
+/* Grant readiness */
+.grant-section { padding: 100px 80px; background: var(--black); }
+.grant-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
+.grant-card { background: var(--gray1); padding: 32px; }
+.grant-category { font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+.grant-name { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.grant-desc { font-size: 12px; color: var(--gray5); line-height: 1.6; }
+.grant-amount { font-family: var(--font-display); font-size: 22px; color: var(--yellow); margin-top: 12px; }
+
+@media(max-width:900px){
+  .page-hero,.story-section,.velion-section,.values-section,.roadmap-section,.team-section,.founder-section,.grant-section{padding-left:24px;padding-right:24px;}
+  .story-grid,.velion-inner{grid-template-columns:1fr;}
+  .values-grid,.team-roles,.grant-grid{grid-template-columns:1fr 1fr;}
+  .founder-card{grid-template-columns:1fr;text-align:center;}
+  .founder-avatar{margin:0 auto;}
+  .founder-socials{justify-content:center;}
+  .rm-item{grid-template-columns:1fr;gap:12px;}
+  .rm-date{align-self:flex-start;}
+}
+@media(max-width:600px){
+  .values-grid,.team-roles,.grant-grid{grid-template-columns:1fr;}
+  .team-coming{padding:40px 24px;}
+  .team-coming-icon{font-size:28px;}
+}
+</style>
+</head>
+<body>
+<div class="grid-texture" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+<section class="page-hero">
+  <div class="page-hero-glow"></div>
+  <div class="tag reveal">Our Story</div>
+  <h1 class="section-title reveal">BORN IN<br><span class="hl">AFRICA.</span><br><span class="ol">BUILT FOR</span><br><span class="hl">THE WORLD.</span></h1>
+  <p style="font-size:18px;line-height:1.85;color:var(--gray5);max-width:580px;margin-top:32px;" class="reveal">$WATT Protocol started with a question: why is Africa — the continent with the most sunshine on Earth — also the continent most starved of energy? And what would it look like if technology finally answered that question correctly?</p>
+</section>
+
+<!-- STORY -->
+<section class="story-section">
+  <div class="tag reveal">The Origin</div>
+  <h2 class="section-title reveal" style="margin-bottom:60px;">THE STORY<br>BEHIND <span class="hl">$WATT</span></h2>
+  <div class="story-grid">
+    <div class="story-block reveal">
+      <div class="story-block-inner">
+        <div class="story-num">01</div>
+        <div class="story-label">The Problem</div>
+        <div class="story-title">Africa Has the Sun. Africa Has the Need.</div>
+        <div class="story-text">Nigeria receives 5.5–7.5 peak sun hours per day. Germany gets 2.5–4. Yet Germany has one of the world's largest solar industries and Nigeria does not. Not because the technology doesn't exist. Because the financial infrastructure to make it work for ordinary people never existed. Until now.</div>
+      </div>
+    </div>
+    <div class="story-block reveal">
+      <div class="story-block-inner">
+        <div class="story-num">02</div>
+        <div class="story-label">The Insight</div>
+        <div class="story-title">What if Every kWh Had a Price Tag?</div>
+        <div class="story-text">Corporations earn billions from carbon credits. Utilities earn from energy sales. Governments earn from taxes on energy. The person who installs a solar panel — who does the actual physical act of decarbonizing the planet — earns nothing extra. $WATT was born to fix this fundamental injustice using blockchain technology.</div>
+      </div>
+    </div>
+    <div class="story-block reveal">
+      <div class="story-block-inner">
+        <div class="story-num">03</div>
+        <div class="story-label">The Expansion</div>
+        <div class="story-title">Africa First. World Always.</div>
+        <div class="story-text">We start in Nigeria because we know it. We understand the energy gap, the infrastructure challenges, and the enormous appetite for solutions that actually work. But the protocol is built universal — every standard, every connectivity option, every language. Africa proves the model. The world is the market.</div>
+      </div>
+    </div>
+    <div class="story-block reveal">
+      <div class="story-block-inner">
+        <div class="story-num">04</div>
+        <div class="story-label">The Mission</div>
+        <div class="story-title">More Than Tokens. Infrastructure.</div>
+        <div class="story-text">$WATT is not a crypto project that happens to care about clean energy. It is clean energy infrastructure that happens to use blockchain. In 10 years, the goal is for $WATT to be what SWIFT is to banking — the universal protocol layer for individual clean energy rewards, recognized by the UN, used by billions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VELION PARENT -->
+<section class="velion-section">
+  <div class="tag reveal">Parent Company</div>
+  <h2 class="section-title reveal">PART OF<br><span class="hl">VELION</span><br>GLOBAL</h2>
+  <div class="velion-inner" style="margin-top:60px;">
+    <div class="velion-logo-display reveal">
+      <div class="velion-logo-text">VELION</div>
+      <div class="velion-sub-text">Global Technologies</div>
+      <div class="velion-divider"></div>
+      <div style="display:flex;gap:16px;align-items:center;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--gray4);margin-bottom:6px;">PORTFOLIO</div>
+          <div style="display:flex;align-items:center;gap:10px;"><div class="velion-watt">$WATT</div><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--sm"></div>
+        </div>
+        <div style="color:var(--gray4);font-size:20px;">·</div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--gray4);margin-bottom:6px;">PORTFOLIO</div>
+          <div style="font-family:var(--font-display);font-size:20px;color:var(--gray5);">BEAKON</div>
+        </div>
+        <div style="color:var(--gray4);font-size:20px;">·</div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--gray4);margin-bottom:6px;">PORTFOLIO</div>
+          <div style="font-family:var(--font-display);font-size:20px;color:var(--gray5);">FORMA</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <p style="font-size:15px;line-height:1.85;color:var(--gray5);margin-bottom:20px;">$WATT Protocol is a flagship product of <strong style="color:var(--white)">Watt Protocol Limited</strong> — a technology holding company building world-class platforms across clean energy, education, and digital art.</p>
+      <p style="font-size:15px;line-height:1.85;color:var(--gray5);margin-bottom:20px;">Velion's portfolio spans three verticals: $WATT Protocol in clean energy rewards, Beakon in verified education marketplaces, and FORMA in global art NFTs. Each platform is built to global standards, starting from Africa.</p>
+      <p style="font-size:15px;line-height:1.85;color:var(--gray5);">The parent company structure gives $WATT access to cross-portfolio resources, shared infrastructure, and a unified mission: building technology that works equally well in Lagos and London.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+  <div class="tag reveal">What We Stand For</div>
+  <h2 class="section-title reveal">OUR<br><span class="hl">CORE</span><br>VALUES</h2>
+  <div class="values-grid">
+    <div class="value-card reveal">
+      <div class="value-num">01</div>
+      <div class="value-title">TRANSPARENCY</div>
+      <div class="value-desc">Every token, every grant, every smart contract is public and auditable. We operate on the principle that trustless systems are better than trusted ones — because math cannot lie.</div>
+    </div>
+    <div class="value-card reveal">
+      <div class="value-num">02</div>
+      <div class="value-title">INCLUSION</div>
+      <div class="value-desc">$WATT works without a bank account, without a credit score, and without being in a wealthy country. If you have a solar panel and a phone, you participate equally. No exceptions.</div>
+    </div>
+    <div class="value-card reveal">
+      <div class="value-num">03</div>
+      <div class="value-title">IMPACT FIRST</div>
+      <div class="value-desc">We measure our success in kWh generated, households powered, schools lit, and water pumped — not just token price. Real-world impact is the metric that matters.</div>
+    </div>
+    <div class="value-card reveal">
+      <div class="value-num">04</div>
+      <div class="value-title">COMMUNITY OWN</div>
+      <div class="value-desc">60% of all $WATT tokens go to the community that generates energy. The protocol serves its users — not its investors. This is why there is zero VC presale.</div>
+    </div>
+    <div class="value-card reveal">
+      <div class="value-num">05</div>
+      <div class="value-title">BUILD GLOBAL</div>
+      <div class="value-desc">Every technical decision — standards compliance, language support, connectivity options — is made with a global user in mind. From day one, we build for 8 billion people.</div>
+    </div>
+    <div class="value-card reveal">
+      <div class="value-num">06</div>
+      <div class="value-title">OPEN SOURCE</div>
+      <div class="value-desc">All smart contracts are open source and publicly auditable. We believe that trust in a protocol must be earned through code — not marketing. Fork us. Audit us. Challenge us.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder-section" id="team">
+  <div class="tag reveal">Leadership</div>
+  <h2 class="section-title reveal">THE<br><span class="hl">FOUNDER</span></h2>
+  <div class="founder-card reveal" style="margin-top:60px;">
+    <div class="founder-avatar">
+      <img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--lg">
+      <div class="founder-badge">Founder & CEO</div>
+    </div>
+    <div>
+      <div class="founder-name">Velion Global</div>
+      <div class="founder-role">Founder & CEO · $WATT Protocol · Watt Protocol Limited</div>
+      <p class="founder-bio">Building $WATT Protocol from Nigeria — the world's first universal energy-to-earn ecosystem. Driven by the conviction that the 733 million people without electricity deserve not just access to energy, but a financial stake in the clean energy revolution. Starting with a $56 prototype, growing to a global protocol.</p>
+      <p class="founder-bio" style="margin-top:16px;">Also building Beakon (verified teaching marketplace) and FORMA (global art NFTs) under Watt Protocol Limited — proving that world-class technology can be built from Africa for the world.</p>
+      <div class="founder-socials">
+        <a class="f-soc-link" href="https://x.com/wattprotocol" target="_blank" rel="noopener"><span data-icon="twitter"></span><span style="margin-left:8px;">X</span></a>
+        <a class="f-soc-link" href="https://linkedin.com/company/wattprotocol" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM COMING -->
+<section class="team-section">
+  <div class="tag reveal">Growing Team</div>
+  <h2 class="section-title reveal">CO-FOUNDERS<br><span class="hl">WANTED.</span></h2>
+  <div class="team-coming reveal">
+    <div class="team-coming-icon"><span data-icon="sparkles"></span></div>
+    <div class="team-coming-title">WE ARE BUILDING</div>
+    <p class="team-coming-desc">$WATT is actively recruiting exceptional co-founders and early team members who believe clean energy should reward everyone — especially those who generate it. If you have the skills below and share the mission, reach out.</p>
+    <a href="mailto:hello@wattprotocol.io" class="btn btn-primary">Apply to Join the Team</a>
+    <div class="team-roles">
+      <div class="role-card">
+        <div class="role-title">CTO / IoT Engineer</div>
+        <div class="role-desc">Builds and programs the WATT Meter hardware. Expertise in embedded systems, firmware, and energy measurement.</div>
+        <div class="role-badge">● Hiring Now</div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Smart Contract Developer</div>
+        <div class="role-desc">Solidity expertise. Builds ERC-20 token, reward contracts, and oracle integrations on Base network.</div>
+        <div class="role-badge">● Hiring Now</div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Full-Stack Developer</div>
+        <div class="role-desc">Web and mobile app. User dashboard, blockchain interface, and API integrations.</div>
+        <div class="role-badge">● Hiring Now</div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Head of Partnerships</div>
+        <div class="role-desc">Builds relationships with solar companies, carbon credit brokers, and governments worldwide.</div>
+        <div class="role-badge">○ Coming Soon</div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Regional Leads</div>
+        <div class="role-desc">Hired locally in each expansion market. Africa, Asia, Latin America, Europe, North America.</div>
+        <div class="role-badge">○ Phase 2</div>
+      </div>
+      <div class="role-card">
+        <div class="role-title">Head of Community</div>
+        <div class="role-desc">Manages the SDG Community Fund DAO, grant applications, and on-the-ground impact reporting.</div>
+        <div class="role-badge">○ Phase 2</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRANT READINESS -->
+<section class="grant-section">
+  <div class="tag reveal" style="justify-content:center;">Grant Ready</div>
+  <h2 class="section-title reveal" style="text-align:center;">FUNDING<br><span class="hl">SOURCES</span><br>WE TARGET</h2>
+  <div class="grant-grid">
+    <div class="grant-card reveal">
+      <div class="grant-category">Web3 Grants</div>
+      <div class="grant-name">Ethereum Foundation</div>
+      <div class="grant-desc">Ecosystem grants for infrastructure projects building on Ethereum and its L2 networks.</div>
+      <div class="grant-amount">Up to $50K</div>
+    </div>
+    <div class="grant-card reveal">
+      <div class="grant-category">Web3 Grants</div>
+      <div class="grant-name">Base Ecosystem Fund</div>
+      <div class="grant-desc">Coinbase's L2 actively funds infrastructure projects that bring real-world utility to Base.</div>
+      <div class="grant-amount">Non-dilutive</div>
+    </div>
+    <div class="grant-card reveal">
+      <div class="grant-category">Web3 Grants</div>
+      <div class="grant-name">Gitcoin Grants</div>
+      <div class="grant-desc">Community-funded public goods grants. Excellent for early traction and global visibility.</div>
+      <div class="grant-amount">Community Vote</div>
+    </div>
+    <div class="grant-card reveal">
+      <div class="grant-category">Climate Grants</div>
+      <div class="grant-name">World Bank Climate Finance</div>
+      <div class="grant-desc">Climate finance programs specifically targeting energy access and clean tech in developing nations.</div>
+      <div class="grant-amount">$100K–$2M</div>
+    </div>
+    <div class="grant-card reveal">
+      <div class="grant-category">Climate Grants</div>
+      <div class="grant-name">EU Horizon Europe</div>
+      <div class="grant-desc">Clean energy and digitalization grants for global projects with measurable SDG impact.</div>
+      <div class="grant-amount">€50K–€5M</div>
+    </div>
+    <div class="grant-card reveal">
+      <div class="grant-category">Climate Grants</div>
+      <div class="grant-name">African Development Bank</div>
+      <div class="grant-desc">Climate Action grants specifically for origin market (Nigeria, Ghana, Kenya, South Africa).</div>
+      <div class="grant-amount">$500K+</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:100px 80px;text-align:center;">
+  <h2 class="section-title reveal">READY TO<br><span class="hl">BUILD</span><br>WITH US?</h2>
+  <p style="font-size:16px;color:var(--gray5);max-width:460px;margin:28px auto 48px;line-height:1.85;" class="reveal">Join the waitlist. Follow the build in public. Apply to the team. Every person who believes in this mission makes it stronger.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
+    <a href="index.html#waitlist" class="btn btn-primary"><span data-icon="zap"></span><span style="margin-left:10px;">Join the Waitlist</span></a>
+    <a href="mailto:hello@wattprotocol.io" class="btn btn-outline">Contact Us <span data-icon="arrow-right" style="margin-left:10px;"></span></a>
+  </div>
+</section>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+</body>
+</html>

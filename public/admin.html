@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$WATT Admin Dashboard</title>
+<script src="icons.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<style>
+:root {
+  --black:  #080808;
+  --gray1:  #0f0f0f;
+  --gray2:  #1a1a1a;
+  --gray3:  #222;
+  --gray4:  #555;
+  --gray5:  #888;
+  --border: #222;
+  --yellow: #f5e642;
+  --green:  #22c55e;
+  --red:    #ef4444;
+  --orange: #f97316;
+  --blue:   #3b82f6;
+  --white:  #fff;
+  --mono:   'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--black); color: var(--white); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+.watt-icon,
+.watt-icon-inline { display:inline-flex; align-items:center; justify-content:center; width:1em; height:1em; flex-shrink:0; vertical-align:-0.16em; }
+.watt-icon svg,
+.watt-icon-inline svg { width:100%; height:100%; display:block; }
+
+/* ── Nav ── */
+.admin-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--gray1); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 56px;
+}
+.admin-nav-brand { display: flex; align-items: center; gap: 12px; }
+.admin-nav-logo { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--yellow); letter-spacing: 0.15em; }
+.admin-badge { background: var(--yellow); color: var(--black); font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: 0.2em; padding: 3px 8px; text-transform: uppercase; }
+.admin-nav-right { display: flex; align-items: center; gap: 16px; }
+.admin-email { font-family: var(--mono); font-size: 11px; color: var(--gray5); }
+.btn-logout { background: none; border: 1px solid var(--border); color: var(--gray4); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; padding: 6px 14px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; }
+.btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Layout ── */
+.admin-body { max-width: 1400px; margin: 0 auto; padding: 32px; }
+
+/* ── Section headers ── */
+.section-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gray4); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── Stats grid ── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+.stat-card { background: var(--gray1); border: 1px solid var(--border); padding: 24px; position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--accent, var(--yellow)); }
+.stat-label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gray4); margin-bottom: 10px; }
+.stat-value { font-size: 32px; font-weight: 700; color: var(--white); line-height: 1; }
+.stat-sub { font-family: var(--mono); font-size: 10px; color: var(--gray5); margin-top: 6px; }
+
+/* ── Two-col ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+
+/* ── Panel ── */
+.panel { background: var(--gray1); border: 1px solid var(--border); padding: 24px; }
+
+/* ── Tables ── */
+.mini-table { width: 100%; border-collapse: collapse; }
+.mini-table th { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray4); padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.mini-table td { padding: 10px 10px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--white); }
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table tr:hover td { background: var(--gray2); }
+.mono { font-family: var(--mono); font-size: 11px; color: var(--yellow); }
+.tag-yes { font-family: var(--mono); font-size: 10px; color: var(--yellow); background: rgba(245,230,66,0.1); padding: 2px 8px; }
+.tag-no  { font-family: var(--mono); font-size: 10px; color: var(--gray4); background: var(--gray2); padding: 2px 8px; }
+.tag-date { font-family: var(--mono); font-size: 11px; color: var(--gray5); }
+
+/* ── Config panel ── */
+.config-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.config-field { display: flex; flex-direction: column; gap: 8px; }
+.config-field label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray4); }
+.config-field input, .config-field select, .config-field textarea {
+  background: var(--gray2); border: 1px solid var(--border); color: var(--white);
+  font-family: var(--mono); font-size: 13px; padding: 10px 14px; outline: none;
+  transition: border-color 0.2s; width: 100%;
+}
+.config-field input:focus, .config-field select:focus, .config-field textarea:focus { border-color: var(--yellow); }
+.config-field textarea { resize: vertical; min-height: 70px; }
+.config-actions { display: flex; gap: 12px; align-items: center; }
+.btn-save { background: var(--yellow); color: var(--black); border: none; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; padding: 12px 28px; cursor: pointer; transition: background 0.2s; }
+.btn-save:hover { background: #ffe100; }
+.config-msg { font-family: var(--mono); font-size: 11px; }
+
+/* ── Users table ── */
+.users-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.search-input { flex: 1; background: var(--gray2); border: 1px solid var(--border); color: var(--white); font-family: var(--mono); font-size: 12px; padding: 10px 16px; outline: none; transition: border-color 0.2s; }
+.search-input:focus { border-color: var(--yellow); }
+.search-input::placeholder { color: var(--gray4); }
+.btn-export { background: var(--gray2); border: 1px solid var(--border); color: var(--white); font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; padding: 10px 20px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; white-space: nowrap; }
+.btn-export:hover { border-color: var(--yellow); color: var(--yellow); }
+.users-count { font-family: var(--mono); font-size: 10px; color: var(--gray4); white-space: nowrap; }
+
+.users-table-wrap { overflow-x: auto; }
+.users-table { width: 100%; border-collapse: collapse; }
+.users-table th { font-family: var(--mono); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray4); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); background: var(--gray1); position: sticky; top: 0; }
+.users-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+.users-table tr:hover td { background: rgba(255,255,255,0.02); }
+.email-cell { font-size: 13px; }
+.action-btn { background: none; border: 1px solid var(--border); color: var(--gray4); font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; padding: 4px 10px; cursor: pointer; text-transform: uppercase; transition: all 0.15s; margin-right: 4px; }
+.action-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+.action-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+/* ── Pagination ── */
+.pagination { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+.page-info { font-family: var(--mono); font-size: 11px; color: var(--gray4); }
+.page-btns { display: flex; gap: 8px; }
+.page-btn { background: var(--gray2); border: 1px solid var(--border); color: var(--white); font-family: var(--mono); font-size: 10px; padding: 7px 16px; cursor: pointer; transition: all 0.15s; }
+.page-btn:hover:not(:disabled) { border-color: var(--yellow); color: var(--yellow); }
+.page-btn:disabled { opacity: 0.3; cursor: default; }
+.chart-range-btn.active { border-color: var(--yellow); color: var(--yellow); }
+
+/* ── Leaflet map dark theme overrides ── */
+.leaflet-container { background: #0e0e0e; font-family: var(--mono); }
+.leaflet-popup-content-wrapper { background: #111; border: 1px solid rgba(245,230,66,0.2); border-radius: 2px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); color: #fff; }
+.leaflet-popup-tip { background: #111; }
+.leaflet-popup-content { margin: 12px 16px; font-size: 12px; }
+.leaflet-popup-content strong { color: var(--yellow); display: block; margin-bottom: 4px; }
+.geo-country-chip { background: var(--gray2); border: 1px solid var(--border); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.geo-country-chip .name { font-size: 12px; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.geo-country-chip .count { font-family: var(--mono); font-size: 13px; color: var(--yellow); flex-shrink: 0; }
+.geo-country-chip .bar { height: 2px; background: var(--yellow); margin-top: 6px; transition: width 0.6s ease; }
+#geoMap .leaflet-attribution-flag { display: none !important; }
+
+/* ── Loading / empty ── */
+.loading-row td { text-align: center; color: var(--gray4); font-family: var(--mono); font-size: 11px; padding: 32px !important; }
+.flash { animation: flash 0.4s ease; }
+@keyframes flash { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── Announcement banner ── */
+#announcementBanner { display: none; background: var(--yellow); color: var(--black); font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-align: center; padding: 10px 24px; }
+
+/* ── Roadmap editor ── */
+.rm-editor { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.rm-stage-row { background: var(--gray2); border: 1px solid var(--border); padding: 16px 20px; display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: start; transition: border-color 0.2s; }
+.rm-stage-row.is-current { border-color: var(--yellow); }
+.rm-stage-row.is-done { border-color: rgba(34,197,94,0.4); }
+.rm-status-col { display: flex; flex-direction: column; gap: 8px; }
+.rm-status-select { background: var(--gray1); border: 1px solid var(--border); color: var(--white); font-family: var(--mono); font-size: 10px; padding: 6px 8px; outline: none; cursor: pointer; width: 100%; transition: border-color 0.2s; }
+.rm-status-select:focus { border-color: var(--yellow); }
+.rm-status-badge { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; padding: 4px 8px; }
+.rm-status-badge.done     { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+.rm-status-badge.current  { background: rgba(245,230,66,0.15); color: var(--yellow); border: 1px solid rgba(245,230,66,0.3); }
+.rm-status-badge.upcoming { background: var(--gray3); color: var(--gray4); border: 1px solid var(--border); }
+.rm-fields { display: flex; flex-direction: column; gap: 8px; }
+.rm-field-row { display: grid; grid-template-columns: 1fr 160px; gap: 8px; }
+.rm-input { background: var(--gray1); border: 1px solid var(--border); color: var(--white); font-family: var(--mono); font-size: 12px; padding: 8px 12px; outline: none; width: 100%; transition: border-color 0.2s; }
+.rm-input:focus { border-color: var(--yellow); }
+.rm-textarea { background: var(--gray1); border: 1px solid var(--border); color: #ccc; font-family: 'Inter', sans-serif; font-size: 12px; padding: 8px 12px; outline: none; width: 100%; resize: vertical; min-height: 54px; line-height: 1.5; transition: border-color 0.2s; }
+.rm-textarea:focus { border-color: var(--yellow); }
+.rm-stage-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+.rm-empty { text-align: center; color: var(--gray4); font-family: var(--mono); font-size: 11px; padding: 28px; border: 1px dashed var(--border); }
+.rm-add-btn { background: none; border: 1px dashed var(--border); color: var(--gray4); font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 13px; cursor: pointer; width: 100%; text-align: center; transition: all 0.15s; margin-bottom: 16px; }
+.rm-add-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .config-grid { grid-template-columns: 1fr; }
+  .admin-body { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Announcement Banner -->
+<div id="announcementBanner"></div>
+
+<!-- Nav -->
+<nav class="admin-nav">
+  <div class="admin-nav-brand">
+    <span class="admin-nav-logo"><span data-icon="zap"></span><span style="margin-left:8px;">$WATT</span></span>
+    <span class="admin-badge">Admin</span>
+  </div>
+  <div class="admin-nav-right">
+    <span class="admin-email" id="adminEmailDisplay"></span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<div class="admin-body" id="adminLogin" style="display:none;max-width:560px;">
+  <div class="panel">
+    <div class="section-title">Admin Sign In</div>
+    <div class="config-grid">
+      <div class="config-field">
+        <label>Email</label>
+        <input type="email" id="adminLoginEmail" placeholder="admin@email.com">
+      </div>
+      <div class="config-field">
+        <label>Password</label>
+        <input type="password" id="adminLoginPassword" placeholder="your password">
+      </div>
+    </div>
+    <div class="config-actions" style="margin-top:20px">
+      <button class="btn-save" id="adminLoginBtn" onclick="loginAdmin()">Sign In</button>
+      <span id="adminLoginMsg" class="config-msg"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Body -->
+<div class="admin-body" id="adminApp" style="display:none;">
+
+  <!-- Stats -->
+  <div class="section-title">Overview</div>
+  <div class="stats-grid">
+    <div class="stat-card" style="--accent:var(--yellow)">
+      <div class="stat-label">Total Members</div>
+      <div class="stat-value" id="sTotal">—</div>
+      <div class="stat-sub" id="sToday">— new today</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--green)">
+      <div class="stat-label">Founding Members</div>
+      <div class="stat-value" id="sFounding">—</div>
+      <div class="stat-sub" id="sFoundingPct">— of total</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--orange)">
+      <div class="stat-label">Total Referrals</div>
+      <div class="stat-value" id="sReferrals">—</div>
+      <div class="stat-sub" id="sWattFromRefs">— $WATT earned</div>
+    </div>
+    <div class="stat-card" style="--accent:var(--blue)">
+      <div class="stat-label">Referral Reward</div>
+      <div class="stat-value" id="sReward">—</div>
+      <div class="stat-sub" id="sThreshold">— founding slots</div>
+    </div>
+  </div>
+
+  <!-- Signups Trend Chart -->
+  <div class="section-title">Signup Trend</div>
+  <div class="panel cv-auto-light" style="margin-bottom:32px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gray4)">Daily new members</span>
+      <div style="display:flex;gap:8px;">
+        <button class="page-btn chart-range-btn active" data-days="14" onclick="setChartRange(14, this)">14d</button>
+        <button class="page-btn chart-range-btn" data-days="30" onclick="setChartRange(30, this)">30d</button>
+        <button class="page-btn chart-range-btn" data-days="90" onclick="setChartRange(90, this)">90d</button>
+      </div>
+    </div>
+    <div style="position:relative;height:200px;">
+      <canvas id="signupChart"></canvas>
+    </div>
+  </div>
+
+  <!-- User Geography Map -->
+  <div class="section-title">User Geography</div>
+  <div class="panel cv-auto-light" style="margin-bottom:32px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gray4)">Signup locations detected via IP · bubble size = user count</span>
+      <button class="page-btn" onclick="loadGeoMap()" style="font-size:9px;padding:6px 12px;"><span data-icon="refresh-cw"></span><span style="margin-left:8px;">Refresh</span></button>
+    </div>
+    <!-- Map container -->
+    <div id="geoMap" style="width:100%;height:400px;border:1px solid rgba(245,230,66,0.1);border-radius:2px;"></div>
+    <!-- Top countries table -->
+    <div style="margin-top:20px;">
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:0.25em;color:var(--gray4);text-transform:uppercase;margin-bottom:12px;">Top Countries</div>
+      <div id="geoCountryList" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- Page Views Analytics -->
+  <div class="section-title">Page Views</div>
+  <div class="panel cv-auto-light" style="margin-bottom:32px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
+      <span style="font-family:var(--mono);font-size:11px;color:var(--gray4)">All-time views per page</span>
+      <button class="page-btn" onclick="loadPageViews()" style="font-size:9px;padding:6px 12px;"><span data-icon="refresh-cw"></span><span style="margin-left:8px;">Refresh</span></button>
+    </div>
+    <table class="mini-table">
+      <thead><tr>
+        <th>Page</th>
+        <th style="text-align:right">Views</th>
+        <th style="text-align:right">Last Visit</th>
+      </tr></thead>
+      <tbody id="pvBody"><tr><td colspan="3" style="color:var(--gray4);text-align:center;padding:20px">Loading...</td></tr></tbody>
+    </table>
+  </div>
+
+  <!-- Recent + Top Referrers -->
+  <div class="two-col">
+    <div class="panel cv-auto-light">
+      <div class="section-title">Recent Signups</div>
+      <table class="mini-table">
+        <thead><tr>
+          <th>Email</th>
+          <th>Founded</th>
+          <th>Date</th>
+        </tr></thead>
+        <tbody id="recentBody">
+          <tr><td colspan="3" style="text-align:center;color:var(--gray4);font-family:var(--mono);font-size:11px;padding:24px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel cv-auto-light">
+      <div class="section-title">Top Referrers</div>
+      <table class="mini-table">
+        <thead><tr>
+          <th>#</th>
+          <th>Email</th>
+          <th>Refs</th>
+          <th>$WATT</th>
+        </tr></thead>
+        <tbody id="topBody">
+          <tr><td colspan="4" style="text-align:center;color:var(--gray4);font-family:var(--mono);font-size:11px;padding:24px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Config Editor -->
+  <div class="section-title">Dynamic Configuration</div>
+  <div class="panel cv-auto-light" style="margin-bottom:32px">
+    <div class="config-grid">
+      <div class="config-field">
+        <label>Referral Reward ($WATT per referral)</label>
+        <input type="number" id="cfgReward" min="0" placeholder="500">
+      </div>
+      <div class="config-field">
+        <label>Founding Member Threshold (first N slots)</label>
+        <input type="number" id="cfgThreshold" min="1" placeholder="1000">
+      </div>
+      <div class="config-field">
+        <label>Founding Member Multiplier (earning rate)</label>
+        <input type="number" id="cfgMultiplier" min="1" step="0.1" placeholder="1.5">
+      </div>
+    </div>
+    <div class="config-grid">
+      <div class="config-field" style="grid-column:1/-1">
+        <label>Announcement Banner (leave empty to hide)</label>
+        <input type="text" id="cfgAnnouncement" placeholder="e.g. Mainnet launch date announced — March 2026">
+      </div>
+    </div>
+    <div class="config-actions" style="margin-top:20px">
+      <button class="btn-save" onclick="saveConfig()">Save Configuration</button>
+      <span id="configMsg" class="config-msg"></span>
+    </div>
+  </div>
+
+  <!-- Launch Roadmap Editor -->
+  <div class="section-title">Launch Roadmap</div>
+  <div class="panel cv-auto-light" style="margin-bottom:32px">
+    <div id="rmList" class="rm-editor">
+      <div class="rm-empty">Loading roadmap…</div>
+    </div>
+    <button class="rm-add-btn" onclick="addRoadmapStage()">+ Add New Stage</button>
+    <div class="config-actions">
+      <button class="btn-save" onclick="saveRoadmap()">Save Roadmap</button>
+      <span id="roadmapMsg" class="config-msg"></span>
+    </div>
+  </div>
+
+  <!-- User Management -->
+  <div class="section-title">Member Management</div>
+  <div class="panel cv-auto-light">
+    <div class="users-toolbar">
+      <input class="search-input" id="searchInput" type="email" placeholder="Search by email…" oninput="debounceSearch()">
+      <span class="users-count" id="usersCount"></span>
+      <button class="btn-export" onclick="exportCSV()">Export CSV <span data-icon="download" style="margin-left:8px;"></span></button>
+    </div>
+
+    <div class="users-table-wrap">
+      <table class="users-table">
+        <thead><tr>
+          <th>#</th>
+          <th>Email</th>
+          <th>Ref Code</th>
+          <th>Referrals</th>
+          <th>$WATT</th>
+          <th>Founded</th>
+          <th>Referred By</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr></thead>
+        <tbody id="usersBody">
+          <tr class="loading-row"><td colspan="9">Loading members…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination">
+      <span class="page-info" id="pageInfo"></span>
+      <div class="page-btns">
+        <button class="page-btn" id="prevBtn" onclick="changePage(-1)" disabled><span data-icon="arrow-left"></span><span style="margin-left:8px;">Prev</span></button>
+        <button class="page-btn" id="nextBtn" onclick="changePage(1)"  disabled><span style="margin-right:8px;">Next</span><span data-icon="arrow-right"></span></button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /admin-body -->
+
+<script>
+/* ── Toast ── */
+(function(){
+  const s=document.createElement('style');
+  s.textContent=`#wtt{position:fixed;bottom:28px;right:28px;z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none}.wt{display:flex;align-items:center;gap:12px;background:#1a1a1a;border:1px solid #333;color:#fff;font-family:'Courier New',monospace;font-size:12px;font-weight:700;letter-spacing:.06em;padding:14px 20px;min-width:260px;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.6);transform:translateX(120%);opacity:0;transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;pointer-events:auto}.wt.show{transform:translateX(0);opacity:1}.wt.hide{transform:translateX(120%);opacity:0}.wt-bar{width:3px;height:36px;flex-shrink:0}.wt.success .wt-bar{background:#22c55e}.wt.error .wt-bar{background:#ef4444}.wt.info .wt-bar{background:#f5e642}.wt-msg{flex:1;line-height:1.5}.wt-x{background:none;border:none;color:#555;font-size:16px;cursor:pointer;padding:0 0 0 8px;transition:color .15s}.wt-x:hover{color:#fff}`;
+  document.head.appendChild(s);
+  const c=document.createElement('div');c.id='wtt';document.body.appendChild(c);
+  const icons={success:'check',error:'x',info:'zap'};
+  window.wattToast=function(msg,type='info',dur=4000){
+    const t=document.createElement('div');
+    const bar=document.createElement('div');
+    const icon=document.createElement('span');
+    const text=document.createElement('span');
+    const close=document.createElement('button');
+    t.className=`wt ${type}`;
+    bar.className='wt-bar';
+    icon.style.fontSize='15px';
+    icon.style.flexShrink='0';
+    icon.innerHTML=window.wattIconMarkup ? window.wattIconMarkup(icons[type]||'zap', type) : '';
+    text.className='wt-msg';
+    text.textContent=String(msg||'');
+    close.className='wt-x';
+    close.setAttribute('aria-label','Dismiss');
+    close.innerHTML=window.wattIconMarkup ? window.wattIconMarkup('x', 'Dismiss') : '';
+    t.append(bar,icon,text,close);
+    c.appendChild(t);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>t.classList.add('show')));
+    const dismiss=()=>{t.classList.remove('show');t.classList.add('hide');setTimeout(()=>t.remove(),350);};
+    close.addEventListener('click',dismiss);
+    if(dur>0)setTimeout(dismiss,dur);
+    return dismiss;
+  };
+})();
+
+const API = window.WATT_API_BASE || document.documentElement.dataset.apiBase || '';
+const scheduleAdminNonCritical = (fn) => {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(() => fn(), { timeout: 800 });
+    return;
+  }
+  window.setTimeout(fn, 1);
+};
+
+function authHeaders() {
+  return { 'Content-Type': 'application/json' };
+}
+
+function showAdminLogin(message = '') {
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('adminLogin').style.display = 'block';
+  document.getElementById('adminEmailDisplay').textContent = '';
+  const msg = document.getElementById('adminLoginMsg');
+  msg.textContent = message;
+  msg.style.color = message ? 'var(--red)' : '';
+}
+
+function showAdminApp(email) {
+  document.getElementById('adminLogin').style.display = 'none';
+  document.getElementById('adminApp').style.display = 'block';
+  document.getElementById('adminEmailDisplay').textContent = email || 'Admin';
+}
+
+async function loginAdmin() {
+  const email = document.getElementById('adminLoginEmail').value.trim();
+  const password = document.getElementById('adminLoginPassword').value;
+  const btn = document.getElementById('adminLoginBtn');
+  const msg = document.getElementById('adminLoginMsg');
+  btn.disabled = true;
+  btn.textContent = 'Signing In...';
+  msg.textContent = '';
+  try {
+    const res = await fetch(`${API}/api/admin/login`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed.');
+    showAdminApp(data.adminEmail || email);
+    await Promise.all([ loadStats(), loadUsers(), loadChart(14) ]);
+    scheduleAdminNonCritical(() => { loadPageViews(); });
+    scheduleAdminNonCritical(() => { loadGeoMap(); });
+  } catch (error) {
+    msg.textContent = error.message;
+    msg.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+  }
+}
+
+async function logout() {
+  await fetch(`${API}/api/auth/logout`, { method: 'POST' }).catch(() => {});
+  showAdminLogin('');
+}
+
+// ── State ─────────────────────────────────────────────────────────────────
+let currentPage  = 1;
+let totalPages   = 1;
+let totalUsers   = 0;
+let searchTimer  = null;
+let currentReward = 500;
+let roadmapStages = [];
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+(async function init() {
+  try {
+    const res = await fetch(`${API}/api/auth/session`);
+    const data = await res.json();
+    if (!res.ok || data.role !== 'admin') {
+      showAdminLogin('');
+      return;
+    }
+    showAdminApp(data.adminEmail || 'Admin');
+    await Promise.all([ loadStats(), loadUsers(), loadChart(14) ]);
+    scheduleAdminNonCritical(() => { loadPageViews(); });
+    scheduleAdminNonCritical(() => { loadGeoMap(); });
+  } catch {
+    showAdminLogin('Could not verify your admin session.');
+  }
+})();
+
+// ── Stats ─────────────────────────────────────────────────────────────────
+async function loadStats() {
+  try {
+    const res  = await fetch(`${API}/api/admin/stats`, { headers: authHeaders() });
+    if (res.status === 401) return logout();
+    const data = await res.json();
+
+    document.getElementById('sTotal').textContent        = (data.total    || 0).toLocaleString();
+    document.getElementById('sToday').textContent        = `+${data.todayCount || 0} new today`;
+    document.getElementById('sFounding').textContent     = (data.founding  || 0).toLocaleString();
+    document.getElementById('sFoundingPct').textContent  = data.total
+      ? `${Math.round((data.founding / data.total) * 100)}% of total`
+      : '—';
+    document.getElementById('sReferrals').textContent    = (data.totalReferrals || 0).toLocaleString();
+
+    const cfg = data.config || {};
+    currentReward = parseInt(cfg.referral_reward_watt) || 500;
+    const wattFromRefs = (data.totalReferrals || 0) * currentReward;
+    document.getElementById('sWattFromRefs').textContent = wattFromRefs.toLocaleString() + ' $WATT';
+    document.getElementById('sReward').textContent       = currentReward.toLocaleString() + ' $WATT';
+    document.getElementById('sThreshold').textContent    = (parseInt(cfg.founding_member_threshold) || 1000).toLocaleString() + ' founding slots';
+
+    // Populate config form
+    document.getElementById('cfgReward').value        = cfg.referral_reward_watt       || 500;
+    document.getElementById('cfgThreshold').value     = cfg.founding_member_threshold  || 1000;
+    document.getElementById('cfgMultiplier').value    = cfg.founding_member_multiplier || 1.5;
+    document.getElementById('cfgAnnouncement').value  = cfg.announcement               || '';
+
+    // Load roadmap
+    try { roadmapStages = JSON.parse(cfg.roadmap || '[]'); } catch { roadmapStages = []; }
+    renderRoadmap();
+
+    // Announcement banner
+    if (cfg.announcement) {
+      const banner = document.getElementById('announcementBanner');
+      banner.textContent = cfg.announcement;
+      banner.style.display = 'block';
+    }
+
+    // Recent signups
+    const recentBody = document.getElementById('recentBody');
+    if (data.recent?.length) {
+      recentBody.innerHTML = data.recent.map(u => `
+        <tr>
+          <td class="email-cell">${escHtml(u.email)}</td>
+          <td>${u.founding_member ? '<span class="tag-yes">Yes</span>' : '<span class="tag-no">No</span>'}</td>
+          <td class="tag-date">${fmtDate(u.signed_up_at)}</td>
+        </tr>
+      `).join('');
+    } else {
+      recentBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--gray4);padding:24px;font-family:var(--mono);font-size:11px;">No signups yet</td></tr>';
+    }
+
+    // Top referrers
+    const topBody = document.getElementById('topBody');
+    if (data.topReferrers?.length) {
+      topBody.innerHTML = data.topReferrers.map((u, i) => `
+        <tr>
+          <td style="color:var(--gray4);font-family:var(--mono);font-size:11px;">${i + 1}</td>
+          <td class="email-cell">${escHtml(u.email)}</td>
+          <td style="font-weight:700;color:var(--yellow)">${u.referrals_count || 0}</td>
+          <td style="color:var(--green);font-family:var(--mono);font-size:12px;">${((u.referrals_count || 0) * currentReward).toLocaleString()}</td>
+        </tr>
+      `).join('');
+    } else {
+      topBody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--gray4);padding:24px;font-family:var(--mono);font-size:11px;">No referrals yet</td></tr>';
+    }
+
+  } catch (e) {
+    console.error('Stats load error:', e);
+  }
+}
+
+// ── Users table ───────────────────────────────────────────────────────────
+async function loadUsers(page = 1) {
+  currentPage = page;
+  const search = document.getElementById('searchInput').value.trim();
+  const url    = `${API}/api/admin/users?page=${page}&limit=25${search ? '&search=' + encodeURIComponent(search) : ''}`;
+
+  const tbody = document.getElementById('usersBody');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="9">Loading…</td></tr>';
+
+  try {
+    const res  = await fetch(url, { headers: authHeaders() });
+    if (res.status === 401) return logout();
+    const data = await res.json();
+
+    totalPages = data.pages || 1;
+    totalUsers = data.total || 0;
+
+    document.getElementById('usersCount').textContent =
+      `${totalUsers.toLocaleString()} member${totalUsers !== 1 ? 's' : ''}`;
+    document.getElementById('pageInfo').textContent =
+      `Page ${currentPage} of ${totalPages}`;
+    document.getElementById('prevBtn').disabled = currentPage <= 1;
+    document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+
+    if (!data.users?.length) {
+      tbody.innerHTML = `<tr class="loading-row"><td colspan="9">No members found${search ? ' for &quot;' + escHtml(search) + '&quot;' : ''}.</td></tr>`;
+      return;
+    }
+
+    const offset = (currentPage - 1) * 25;
+    tbody.innerHTML = data.users.map((u, i) => `
+      <tr id="row-${u.id}">
+        <td style="color:var(--gray4);font-family:var(--mono);font-size:11px;">${offset + i + 1}</td>
+        <td class="email-cell">${escHtml(u.email)}</td>
+        <td><span class="mono">${escHtml(u.referral_code)}</span></td>
+        <td style="font-weight:700">${u.referrals_count || 0}</td>
+        <td style="color:var(--green);font-family:var(--mono);font-size:12px;">${((u.referrals_count || 0) * currentReward).toLocaleString()}</td>
+        <td id="founding-${u.id}">${u.founding_member ? '<span class="tag-yes">Yes</span>' : '<span class="tag-no">No</span>'}</td>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--gray5)">${escHtml(u.referred_by || '—')}</td>
+        <td class="tag-date">${fmtDate(u.signed_up_at)}</td>
+        <td style="white-space:nowrap;">
+          <button class="action-btn" onclick="toggleFounding('${u.id}', ${!u.founding_member})" title="${u.founding_member ? 'Remove founding status' : 'Grant founding status'}">
+            ${u.founding_member ? 'Unfound' : 'Found'}
+          </button>
+          <button class="action-btn" onclick="resendEmail('${u.id}', '${u.email.replace(/'/g, "\\'")}')" title="Resend dashboard email">Email</button>
+          <button class="action-btn danger" onclick="deleteUser('${u.id}', '${u.email.replace(/'/g, "\\'")}')" title="Permanently delete user">Del</button>
+        </td>
+      </tr>
+    `).join('');
+
+  } catch (e) {
+    tbody.innerHTML = `<tr class="loading-row"><td colspan="9">Error loading members. Is the server running?</td></tr>`;
+  }
+}
+
+// ── Toggle founding member ────────────────────────────────────────────────
+async function toggleFounding(id, newValue) {
+  try {
+    const res = await fetch(`${API}/api/admin/users/${id}`, {
+      method:  'PATCH',
+      headers: authHeaders(),
+      body:    JSON.stringify({ founding_member: newValue }),
+    });
+    if (res.status === 401) return logout();
+    if (res.ok) {
+      const cell = document.getElementById(`founding-${id}`);
+      if (cell) {
+        cell.innerHTML = newValue
+          ? '<span class="tag-yes">Yes</span>'
+          : '<span class="tag-no">No</span>';
+        cell.classList.add('flash');
+        setTimeout(() => cell.classList.remove('flash'), 500);
+      }
+      // Update button text
+      const row = document.getElementById(`row-${id}`);
+      if (row) {
+        const btn = row.querySelector('.action-btn:not(.danger)');
+        if (btn) {
+          btn.textContent = newValue ? 'Unfound' : 'Found';
+          btn.onclick = () => toggleFounding(id, !newValue);
+        }
+      }
+    }
+  } catch (e) { console.error('Toggle founding error:', e); }
+}
+
+// ── Resend email ──────────────────────────────────────────────────────────
+async function resendEmail(id, email) {
+  if (!confirm(`Resend dashboard email to:\n${email}`)) return;
+  try {
+    const res = await fetch(`${API}/api/admin/resend-email/${id}`, {
+      method: 'POST', headers: authHeaders(),
+    });
+    if (res.status === 401) return logout();
+    const data = await res.json();
+    if (data.success) wattToast(`Email sent to ${email}`, 'success');
+    else wattToast(`Failed: ${data.error}`, 'error');
+  } catch (e) { wattToast('Network error — is the server running?', 'error'); }
+}
+
+// ── Delete user ───────────────────────────────────────────────────────────
+async function deleteUser(id, email) {
+  if (!confirm(`Permanently delete member:\n${email}\n\nThis cannot be undone.`)) return;
+  try {
+    const res = await fetch(`${API}/api/admin/users/${id}`, {
+      method:  'DELETE',
+      headers: authHeaders(),
+    });
+    if (res.status === 401) return logout();
+    if (res.ok) {
+      const row = document.getElementById(`row-${id}`);
+      if (row) row.remove();
+      totalUsers--;
+      document.getElementById('usersCount').textContent =
+        `${totalUsers.toLocaleString()} member${totalUsers !== 1 ? 's' : ''}`;
+    }
+  } catch (e) { console.error('Delete error:', e); }
+}
+
+// ── Config save ───────────────────────────────────────────────────────────
+async function saveConfig() {
+  const msg = document.getElementById('configMsg');
+  msg.textContent = '';
+
+  const payload = {
+    referral_reward_watt:       document.getElementById('cfgReward').value,
+    founding_member_threshold:  document.getElementById('cfgThreshold').value,
+    founding_member_multiplier: document.getElementById('cfgMultiplier').value,
+    announcement:               document.getElementById('cfgAnnouncement').value.trim(),
+  };
+
+  try {
+    const res = await fetch(`${API}/api/admin/config`, {
+      method:  'PUT',
+      headers: authHeaders(),
+      body:    JSON.stringify(payload),
+    });
+    if (res.status === 401) return logout();
+    const data = await res.json();
+
+    if (data.success) {
+      msg.textContent = 'Saved';
+      msg.style.color = 'var(--green)';
+      // Update announcement banner live
+      const banner = document.getElementById('announcementBanner');
+      if (payload.announcement) {
+        banner.textContent = payload.announcement;
+        banner.style.display = 'block';
+      } else {
+        banner.style.display = 'none';
+      }
+      // Refresh stats + users to reflect new config values
+      await Promise.all([ loadStats(), loadUsers(currentPage) ]);
+      setTimeout(() => { msg.textContent = ''; }, 3000);
+    } else {
+      msg.textContent = data.error || 'Save failed.';
+      msg.style.color = 'var(--red)';
+    }
+  } catch (e) {
+    msg.textContent = 'Network error.';
+    msg.style.color = 'var(--red)';
+  }
+}
+
+// ── Export CSV ────────────────────────────────────────────────────────────
+function exportCSV() {
+  const url = `${API}/api/admin/export`;
+  const a   = document.createElement('a');
+  a.href    = url;
+  a.setAttribute('download', '');
+  // Auth via query param not supported; open in new tab with Authorization header workaround
+  fetch(url, { headers: authHeaders() })
+    .then(r => r.blob())
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      a.href = blobUrl;
+      a.click();
+      URL.revokeObjectURL(blobUrl);
+    })
+    .catch(() => wattToast('Export failed. Is the server running?', 'error'));
+}
+
+// ── Pagination ────────────────────────────────────────────────────────────
+function changePage(delta) {
+  const newPage = currentPage + delta;
+  if (newPage < 1 || newPage > totalPages) return;
+  loadUsers(newPage);
+}
+
+// ── Search debounce ───────────────────────────────────────────────────────
+function debounceSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => loadUsers(1), 350);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Signup trend chart ────────────────────────────────────────────────────
+// ── Geography Map ──────────────────────────────────────────────────────────
+let _geoMap = null;
+let _geoMarkers = [];
+
+async function loadGeoMap() {
+  try {
+    const res  = await fetch(`${API}/api/admin/geo`, { headers: authHeaders() });
+    if (res.status === 401) return;
+    const json = await res.json();
+    const { countries, total, migrationNeeded } = json;
+
+    if (migrationNeeded) {
+      document.getElementById('geoMap').innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--gray4);font-family:var(--mono);font-size:11px;text-align:center;padding:24px">' +
+        'Run the geo migrations in Supabase first.<br><br>' +
+        '<code style="color:var(--yellow);font-size:10px">ALTER TABLE waitlist_users ADD COLUMN IF NOT EXISTS country_code TEXT;<br>' +
+        'ALTER TABLE waitlist_users ADD COLUMN IF NOT EXISTS country_name TEXT;<br>' +
+        'ALTER TABLE waitlist_users ADD COLUMN IF NOT EXISTS signup_lat FLOAT;<br>' +
+        'ALTER TABLE waitlist_users ADD COLUMN IF NOT EXISTS signup_lng FLOAT;</code></div>';
+      return;
+    }
+
+    // Initialise Leaflet map once
+    if (!_geoMap) {
+      _geoMap = L.map('geoMap', {
+        center: [15, 20], zoom: 2, minZoom: 1, maxZoom: 6,
+        zoomControl: true, scrollWheelZoom: false,
+      });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap · © CARTO',
+        subdomains: 'abcd', maxZoom: 19,
+      }).addTo(_geoMap);
+    }
+
+    // Clear old markers
+    _geoMarkers.forEach(m => m.remove());
+    _geoMarkers = [];
+
+    if (!countries || !countries.length) {
+      document.getElementById('geoCountryList').innerHTML =
+        '<div style="color:var(--gray4);font-family:var(--mono);font-size:11px;padding:12px 0">No geo data yet — new signups will appear here.</div>';
+      return;
+    }
+
+    const maxCount = countries[0].count;
+
+    countries.forEach(c => {
+      if (!c.lat && !c.lng) return; // no coords for this country yet
+
+      const pct    = c.count / maxCount;
+      const radius = Math.max(8, Math.min(60, 8 + pct * 52)); // 8–60px
+      const opacity = 0.3 + pct * 0.5;
+
+      const circle = L.circleMarker([c.lat, c.lng], {
+        radius,
+        fillColor:   '#f5e642',
+        fillOpacity: opacity,
+        color:       '#f5e642',
+        weight:      1,
+        opacity:     0.8,
+      }).addTo(_geoMap);
+
+      circle.bindPopup(`
+        <strong>${escHtml(c.name)} (${escHtml(c.code)})</strong>
+        <div>${c.count.toLocaleString()} user${c.count !== 1 ? 's' : ''}</div>
+        <div style="color:#888;font-size:10px;margin-top:4px">${Math.round((c.count / total) * 100)}% of geolocated users</div>
+      `);
+
+      // Pulse effect for #1 country
+      if (c === countries[0]) {
+        circle.setStyle({ weight: 2, color: '#fff' });
+      }
+
+      _geoMarkers.push(circle);
+    });
+
+    // Render country chips
+    const listEl = document.getElementById('geoCountryList');
+    listEl.innerHTML = countries.slice(0, 20).map(c => {
+      const barW = Math.round((c.count / maxCount) * 100);
+      return `<div class="geo-country-chip">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="name">${escHtml(c.name)}</span>
+            <span class="count">${c.count.toLocaleString()}</span>
+          </div>
+          <div class="bar" style="width:${barW}%"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    console.error('[WATT] Geo load error:', e);
+  }
+}
+
+// ── Page Views ─────────────────────────────────────────────────────────────
+async function loadPageViews() {
+  try {
+    const res  = await fetch(`${API}/api/admin/pageviews`, { headers: authHeaders() });
+    if (res.status === 401) return;
+    const { pages } = await res.json();
+    const tbody = document.getElementById('pvBody');
+    if (!pages || !pages.length) {
+      tbody.innerHTML = '<tr><td colspan="3" style="color:var(--gray4);text-align:center;padding:20px">No page views yet</td></tr>';
+      return;
+    }
+    tbody.innerHTML = pages.map(p => {
+      const d   = new Date(p.updated_at);
+      const ago = d.toLocaleDateString('en', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const pageLabel = p.page.replace('.html', '').replace('index', 'home') || 'home';
+      return `<tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--fg)">${pageLabel}</td>
+        <td style="text-align:right;font-family:var(--mono);font-size:13px;color:var(--yellow)">${(p.views||0).toLocaleString()}</td>
+        <td style="text-align:right;font-size:11px;color:var(--gray4)">${ago}</td>
+      </tr>`;
+    }).join('');
+  } catch { /* silently ignore */ }
+}
+
+let _chart = null;
+
+async function loadChart(days = 14) {
+  try {
+    const res = await fetch(`${API}/api/admin/chart?days=${days}`, { headers: authHeaders() });
+    if (res.status === 401) return logout();
+    const { labels, values } = await res.json();
+
+    // Format labels as "Mar 5" etc.
+    const fmtLabel = iso => {
+      const d = new Date(iso + 'T12:00:00Z');
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    };
+
+    const ctx = document.getElementById('signupChart').getContext('2d');
+
+    if (_chart) { _chart.destroy(); _chart = null; }
+
+    _chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels.map(fmtLabel),
+        datasets: [{
+          label: 'New Members',
+          data: values,
+          backgroundColor: 'rgba(245,230,66,0.25)',
+          borderColor:     'rgba(245,230,66,0.8)',
+          borderWidth: 1,
+          borderRadius: 2,
+          hoverBackgroundColor: 'rgba(245,230,66,0.45)',
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a1a1a',
+            borderColor: '#333',
+            borderWidth: 1,
+            titleColor: '#f5e642',
+            bodyColor: '#fff',
+            titleFont: { family: "'Courier New', monospace", size: 10 },
+            bodyFont:  { family: "'Courier New', monospace", size: 12, weight: '700' },
+            callbacks: { label: ctx => ` ${ctx.parsed.y} member${ctx.parsed.y !== 1 ? 's' : ''}` },
+          },
+        },
+        scales: {
+          x: {
+            grid:  { color: 'rgba(255,255,255,0.04)' },
+            ticks: { color: '#555', font: { family: "'Courier New', monospace", size: 9 }, maxRotation: 45 },
+          },
+          y: {
+            grid:      { color: 'rgba(255,255,255,0.04)' },
+            ticks:     { color: '#555', font: { family: "'Courier New', monospace", size: 10 }, stepSize: 1 },
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  } catch (e) { console.error('Chart load error:', e); }
+}
+
+function setChartRange(days, btn) {
+  document.querySelectorAll('.chart-range-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  loadChart(days);
+}
+
+// ── Roadmap editor ────────────────────────────────────────────────────────
+function renderRoadmap() {
+  const list = document.getElementById('rmList');
+  if (!roadmapStages.length) {
+    list.innerHTML = '<div class="rm-empty">No stages yet. Click "+ Add New Stage" to build your roadmap.</div>';
+    return;
+  }
+  const statusLabel = { done: 'Done', current: 'Current', upcoming: 'Upcoming' };
+  list.innerHTML = roadmapStages.map((s, i) => `
+    <div class="rm-stage-row ${s.status === 'current' ? 'is-current' : s.status === 'done' ? 'is-done' : ''}">
+      <div class="rm-status-col">
+        <div class="rm-status-badge ${s.status}">${statusLabel[s.status] || s.status}</div>
+        <select class="rm-status-select" data-idx="${i}">
+          <option value="upcoming" ${s.status==='upcoming'?'selected':''}>Upcoming</option>
+          <option value="current"  ${s.status==='current' ?'selected':''}>Current</option>
+          <option value="done"     ${s.status==='done'    ?'selected':''}>Done</option>
+        </select>
+        <button class="action-btn" style="font-size:9px;width:100%;text-align:center" onclick="setCurrentStage(${i})">Set Current</button>
+      </div>
+      <div class="rm-fields">
+        <input  class="rm-input"    data-idx="${i}" data-field="title"    value="${escHtml(s.title    || '')}" placeholder="Stage title…" style="font-weight:600">
+        <textarea class="rm-textarea" data-idx="${i}" data-field="desc"   placeholder="Short description…" rows="2">${escHtml(s.desc || '')}</textarea>
+        <input  class="rm-input"    data-idx="${i}" data-field="timeline" value="${escHtml(s.timeline || '')}" placeholder="Timeline (e.g. Month 3–4)" style="color:var(--gray5);font-size:11px">
+      </div>
+      <div class="rm-stage-actions">
+        <button class="action-btn danger" onclick="deleteRoadmapStage(${i})">Delete</button>
+        ${i > 0                          ? `<button class="action-btn" onclick="moveStage(${i},-1)" title="Move up">↑</button>`   : ''}
+        ${i < roadmapStages.length - 1   ? `<button class="action-btn" onclick="moveStage(${i}, 1)" title="Move down">↓</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function collectRoadmapFromDom() {
+  roadmapStages = roadmapStages.map((s, i) => ({
+    title:    document.querySelector(`.rm-input[data-idx="${i}"][data-field="title"]`)?.value    ?? s.title,
+    desc:     document.querySelector(`.rm-textarea[data-idx="${i}"][data-field="desc"]`)?.value  ?? s.desc,
+    timeline: document.querySelector(`.rm-input[data-idx="${i}"][data-field="timeline"]`)?.value ?? s.timeline,
+    status:   document.querySelector(`.rm-status-select[data-idx="${i}"]`)?.value               ?? s.status,
+  }));
+}
+
+function setCurrentStage(idx) {
+  collectRoadmapFromDom();
+  roadmapStages = roadmapStages.map((s, i) => ({
+    ...s, status: i < idx ? 'done' : i === idx ? 'current' : 'upcoming',
+  }));
+  renderRoadmap();
+}
+
+function addRoadmapStage() {
+  collectRoadmapFromDom();
+  roadmapStages.push({ title: '', desc: '', timeline: '', status: 'upcoming' });
+  renderRoadmap();
+  // Scroll the new row into view
+  const rows = document.querySelectorAll('.rm-stage-row');
+  if (rows.length) rows[rows.length - 1].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function deleteRoadmapStage(i) {
+  if (!confirm('Delete this roadmap stage?')) return;
+  collectRoadmapFromDom();
+  roadmapStages.splice(i, 1);
+  renderRoadmap();
+}
+
+function moveStage(i, dir) {
+  collectRoadmapFromDom();
+  const j = i + dir;
+  if (j < 0 || j >= roadmapStages.length) return;
+  [roadmapStages[i], roadmapStages[j]] = [roadmapStages[j], roadmapStages[i]];
+  renderRoadmap();
+}
+
+async function saveRoadmap() {
+  collectRoadmapFromDom();
+  const msg = document.getElementById('roadmapMsg');
+  msg.textContent = '';
+  try {
+    const res = await fetch(`${API}/api/admin/config`, {
+      method:  'PUT',
+      headers: authHeaders(),
+      body:    JSON.stringify({ roadmap: JSON.stringify(roadmapStages) }),
+    });
+    if (res.status === 401) return logout();
+    const data = await res.json();
+    if (data.success) {
+      msg.textContent = 'Roadmap saved';
+      msg.style.color = 'var(--green)';
+      renderRoadmap(); // re-render to update status badges
+      setTimeout(() => { msg.textContent = ''; }, 3000);
+    } else {
+      msg.textContent = data.error || 'Save failed.';
+      msg.style.color = 'var(--red)';
+    }
+  } catch (e) {
+    msg.textContent = 'Network error.';
+    msg.style.color = 'var(--red)';
+  }
+}
+</script>
+</body>
+</html>

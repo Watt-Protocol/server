@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referral Leaderboard · $WATT Protocol</title>
+<meta name="description" content="Top referrers in the $WATT Protocol community. See who's leading the clean energy revolution.">
+<meta property="og:title" content="Leaderboard — $WATT Protocol">
+<meta property="og:description" content="Top referrers earning $WATT for spreading the energy revolution.">
+<meta property="og:image" content="/og-image.png">
+<meta name="theme-color" content="#f5e642">
+<link rel="icon" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="shared.css">
+<style>
+.lb-hero {
+  padding: 140px 24px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.lb-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 30%, rgba(245,230,66,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.lb-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 16px;
+}
+.lb-title {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 10vw, 100px);
+  line-height: 0.9;
+  margin-bottom: 20px;
+}
+.lb-sub {
+  font-size: 16px;
+  color: var(--gray5);
+  max-width: 480px;
+  margin: 0 auto 16px;
+  line-height: 1.7;
+}
+.lb-refresh {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--gray4);
+  text-transform: uppercase;
+}
+
+/* Table */
+.lb-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px 100px;
+}
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.lb-table thead th {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray4);
+  padding: 0 16px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.lb-table thead th:last-child { text-align: right; }
+
+.lb-row {
+  border-bottom: 1px solid rgba(245,230,66,0.05);
+  transition: background 0.15s;
+}
+.lb-row:hover { background: rgba(245,230,66,0.03); }
+
+.lb-row td {
+  padding: 18px 16px;
+  vertical-align: middle;
+}
+
+/* Rank */
+.lb-rank {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--gray4);
+  width: 52px;
+}
+.lb-rank.gold   { color: #f5c518; }
+.lb-rank.silver { color: #b0b8cc; }
+.lb-rank.bronze { color: #cd7f32; }
+
+/* Medal icons for top 3 */
+.lb-medal { font-size: 20px; display: block; }
+
+/* Email */
+.lb-email {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--white);
+}
+.lb-founding {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  border: 1px solid rgba(245,230,66,0.3);
+  padding: 2px 7px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* Referrals count */
+.lb-count {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--yellow);
+  white-space: nowrap;
+}
+.lb-count-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray4);
+  margin-top: 2px;
+}
+
+/* WATT earned */
+.lb-watt {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--white);
+  text-align: right;
+  white-space: nowrap;
+}
+.lb-watt-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray4);
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* Top 3 highlight rows */
+.lb-row.top1 { background: rgba(245,197,24,0.04); }
+.lb-row.top2 { background: rgba(176,184,204,0.02); }
+.lb-row.top3 { background: rgba(205,127,50,0.02); }
+
+/* Empty state */
+.lb-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--gray5);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.lb-empty-icon { font-size: 40px; margin-bottom: 16px; }
+
+/* CTA section */
+.lb-cta {
+  text-align: center;
+  padding: 0 24px 80px;
+}
+.lb-cta-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  padding: 40px;
+  background: var(--gray1);
+}
+.lb-cta-title {
+  font-family: var(--font-display);
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+.lb-cta-sub {
+  font-size: 14px;
+  color: var(--gray5);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.lb-cta-btn {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.lb-cta-btn:hover { background: #ffe100; }
+
+/* Loading skeleton */
+.lb-skeleton-row td { padding: 18px 16px; }
+.lb-skel {
+  height: 18px;
+  background: linear-gradient(90deg, var(--gray2) 25%, var(--gray3) 50%, var(--gray2) 75%);
+  background-size: 200% 100%;
+  animation: skelShimmer 1.4s infinite;
+  border-radius: 2px;
+}
+@keyframes skelShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (max-width: 600px) {
+  .lb-table thead th.hide-mobile,
+  .lb-row td.hide-mobile { display: none; }
+  .lb-email { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="lb-hero">
+  <p class="lb-tag"><span data-icon="users"></span><span style="margin-left:10px;">Community</span></p>
+  <h1 class="lb-title">REFERRAL<br><span style="color:var(--yellow)">LEADERS.</span></h1>
+  <p class="lb-sub">The top builders spreading the $WATT Protocol worldwide. Every referral earns $WATT at launch.</p>
+  <p class="lb-refresh" id="lbRefreshNote">Updated live</p>
+</div>
+
+<div class="lb-wrap">
+  <table class="lb-table" id="lbTable">
+    <thead>
+      <tr>
+        <th style="width:52px">Rank</th>
+        <th>Member</th>
+        <th>Referrals</th>
+        <th class="hide-mobile">$WATT Earned</th>
+      </tr>
+    </thead>
+    <tbody id="lbBody">
+      <!-- Skeleton rows while loading -->
+      <tr class="lb-skeleton-row">
+        <td><div class="lb-skel" style="width:28px"></div></td>
+        <td><div class="lb-skel" style="width:180px"></div></td>
+        <td><div class="lb-skel" style="width:60px"></div></td>
+        <td class="hide-mobile"><div class="lb-skel" style="width:100px"></div></td>
+      </tr>
+      <tr class="lb-skeleton-row">
+        <td><div class="lb-skel" style="width:28px"></div></td>
+        <td><div class="lb-skel" style="width:220px"></div></td>
+        <td><div class="lb-skel" style="width:60px"></div></td>
+        <td class="hide-mobile"><div class="lb-skel" style="width:100px"></div></td>
+      </tr>
+      <tr class="lb-skeleton-row">
+        <td><div class="lb-skel" style="width:28px"></div></td>
+        <td><div class="lb-skel" style="width:160px"></div></td>
+        <td><div class="lb-skel" style="width:60px"></div></td>
+        <td class="hide-mobile"><div class="lb-skel" style="width:100px"></div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="lb-cta">
+  <div class="lb-cta-inner">
+    <div class="lb-cta-title">YOUR SPOT?</div>
+    <p class="lb-cta-sub">Join the waitlist, share your referral link, and climb the leaderboard. Every person you refer earns you 500 $WATT at launch.</p>
+    <a href="index.html#waitlist" class="lb-cta-btn"><span data-icon="user-plus"></span><span style="margin-left:10px;">Join &amp; Start Referring</span></a>
+  </div>
+</div>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+<script>
+(function() {
+  const _apiBase = window.WATT_API_BASE || document.documentElement.dataset.apiBase || '';
+  const rowClass = ['top1', 'top2', 'top3'];
+
+  async function loadLeaderboard() {
+    try {
+      const res  = await fetch(`${_apiBase}/api/leaderboard`);
+      const data = await res.json();
+      const body = document.getElementById('lbBody');
+
+      if (!data.leaders || !data.leaders.length) {
+        body.innerHTML = `<tr><td colspan="4"><div class="lb-empty"><div class="lb-empty-icon">${window.wattIconMarkup ? window.wattIconMarkup('sparkles', 'No referrals yet') : ''}</div>No referrals yet — be the first!</div></td></tr>`;
+        return;
+      }
+
+      body.replaceChildren(...data.leaders.map((l) => {
+        const rankClass = l.rank <= 3 ? ['gold','silver','bronze'][l.rank-1] : '';
+        const trClass = l.rank <= 3 ? rowClass[l.rank-1] : '';
+        const tr = document.createElement('tr');
+        const rankTd = document.createElement('td');
+        const userTd = document.createElement('td');
+        const refsTd = document.createElement('td');
+        const wattTd = document.createElement('td');
+        const rankWrap = document.createElement('div');
+        const email = document.createElement('span');
+
+        tr.className = `lb-row ${trClass}`.trim();
+        rankWrap.className = `lb-rank ${rankClass}`.trim();
+        rankWrap.innerHTML = l.rank <= 3 && window.wattIconMarkup
+          ? window.wattIconMarkup(l.rank === 1 ? 'crown' : 'award', `Rank ${l.rank}`)
+          : String(l.rank);
+        rankTd.appendChild(rankWrap);
+
+        email.className = 'lb-email';
+        email.textContent = l.maskedEmail;
+        userTd.appendChild(email);
+        if (l.foundingMember) {
+          const founder = document.createElement('span');
+          founder.className = 'lb-founding';
+          founder.textContent = 'Founder';
+          userTd.appendChild(founder);
+        }
+
+        refsTd.innerHTML = `<span class="lb-count">${l.referrals.toLocaleString()}</span><span class="lb-count-label">referrals</span>`;
+        wattTd.className = 'hide-mobile';
+        wattTd.innerHTML = `<span class="lb-watt">${l.wattEarned.toLocaleString()} <span style="color:var(--yellow);font-size:14px">$WATT</span></span><span class="lb-watt-label">at launch</span>`;
+        tr.append(rankTd, userTd, refsTd, wattTd);
+        return tr;
+      }));
+
+      document.getElementById('lbRefreshNote').textContent =
+        'Updated ' + new Date().toLocaleTimeString();
+    } catch {
+      document.getElementById('lbBody').innerHTML =
+        `<tr><td colspan="4"><div class="lb-empty"><div class="lb-empty-icon">${window.wattIconMarkup ? window.wattIconMarkup('alert-triangle', 'Load error') : ''}</div>Could not load leaderboard. Try refreshing.</div></td></tr>`;
+    }
+  }
+
+  loadLeaderboard();
+  // Refresh every 60s
+  setInterval(loadLeaderboard, 60_000);
+})();
+</script>
+</body>
+</html>

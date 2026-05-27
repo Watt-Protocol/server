@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="$WATT Token — Tokenomics, distribution, utility and earning calculator.">
+<title>Token — $WATT Protocol</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="$WATT Token — Tokenomics & Distribution">
+<meta property="og:description" content="1 Billion $WATT tokens. 40% earned by energy producers. See full tokenomics, distribution, and the earnings calculator.">
+<meta property="og:url"         content="/token.html">
+<meta property="og:image"       content="/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height"content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="$WATT Token — Tokenomics & Distribution">
+<meta name="twitter:description" content="1 Billion $WATT tokens. 40% earned by energy producers. See full tokenomics, distribution, and the earnings calculator.">
+<meta name="twitter:image"       content="/og-image.png">
+<!-- Canonical -->
+<link rel="canonical" href="/token.html">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-hero { padding: 160px 80px 100px; position: relative; overflow: hidden; }
+.token-overview { padding: 0 80px 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.token-coin-wrap { display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.token-coin {
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  animation: coin-float 5s ease-in-out infinite;
+  box-shadow: 0 0 100px rgba(245,230,66,0.3);
+  position: relative;
+}
+.tc-symbol { font-family: var(--font-display); font-size: 80px; color: var(--black); line-height: 1; }
+.tc-name { font-family: var(--font-mono); font-size: 11px; letter-spacing: 4px; color: rgba(8,10,14,0.7); }
+.coin-ring { position: absolute; border-radius: 50%; border: 1px solid rgba(245,230,66,0.2); animation: ring-pulse 3s ease-in-out infinite; }
+.coin-ring:nth-child(1){ width:340px;height:340px;animation-delay:0s; }
+.coin-ring:nth-child(2){ width:420px;height:420px;animation-delay:0.6s; }
+.token-quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 100%; }
+.tqs { background: var(--gray2); padding: 20px; text-align: center; }
+.tqs-val { font-family: var(--font-display); font-size: 28px; color: var(--yellow); }
+.tqs-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-top: 4px; }
+
+.token-info {}
+.token-info h2 { font-family: var(--font-display); font-size: 56px; line-height: 0.95; margin-bottom: 28px; }
+.token-table { width: 100%; border-collapse: collapse; }
+.token-table tr { border-bottom: 1px solid var(--border); }
+.token-table td { padding: 14px 0; font-size: 14px; }
+.token-table td:first-child { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); width: 45%; }
+.token-table td:last-child { color: var(--white); font-weight: 500; }
+.td-highlight { color: var(--yellow) !important; font-family: var(--font-mono) !important; font-size: 13px !important; }
+
+/* Distribution */
+.dist-section { padding: 100px 80px; background: var(--gray1); }
+.dist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 60px; align-items: start; }
+.dist-bars { display: flex; flex-direction: column; gap: 16px; }
+.dist-item { }
+.dist-item-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.dist-item-name { font-size: 14px; font-weight: 500; }
+.dist-item-pct { font-family: var(--font-mono); font-size: 13px; color: var(--yellow); font-weight: 700; }
+.dist-track { height: 10px; background: var(--gray3); border-radius: 0; overflow: hidden; }
+.dist-fill { height: 100%; transition: width 1.5s ease 0.3s; }
+.dist-fill.c1 { background: var(--yellow); }
+.dist-fill.c2 { background: var(--orange); }
+.dist-fill.c3 { background: var(--green); }
+.dist-fill.c4 { background: var(--gray4); }
+.dist-fill.c5 { background: var(--gray5); }
+.dist-item-detail { font-family: var(--font-mono); font-size: 10px; color: var(--gray4); letter-spacing: 1px; margin-top: 4px; }
+.dist-legend { display: flex; flex-direction: column; gap: 16px; }
+.legend-item { background: var(--gray2); padding: 24px; border-left: 4px solid transparent; }
+.legend-item.c1 { border-left-color: var(--yellow); }
+.legend-item.c2 { border-left-color: var(--orange); }
+.legend-item.c3 { border-left-color: var(--green); }
+.legend-item.c4 { border-left-color: var(--gray4); }
+.legend-item.c5 { border-left-color: var(--gray5); }
+.legend-title { font-weight: 600; margin-bottom: 6px; }
+.legend-desc { font-size: 13px; color: var(--gray5); line-height: 1.6; }
+
+/* Utility section */
+.utility-section { padding: 100px 80px; }
+.utility-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
+.util-card { background: var(--gray2); padding: 36px 28px; position: relative; overflow: hidden; transition: background 0.3s; }
+.util-card:hover { background: var(--gray3); }
+.util-icon { font-size: 22px; margin-bottom: 14px; }
+.util-title { font-family: var(--font-display); font-size: 24px; color: var(--yellow); margin-bottom: 12px; letter-spacing: 1px; }
+.util-desc { font-size: 14px; line-height: 1.75; color: var(--gray5); }
+
+/* Calculator */
+.calc-section { padding: 100px 80px; background: var(--gray1); }
+.calc-box { background: var(--gray2); border: 1px solid var(--border); padding: 60px; max-width: 700px; margin: 60px auto 0; }
+.calc-title { font-family: var(--font-display); font-size: 32px; color: var(--white); margin-bottom: 40px; letter-spacing: 1px; }
+.calc-row { margin-bottom: 32px; }
+.calc-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray4); margin-bottom: 12px; }
+.calc-slider { width: 100%; -webkit-appearance: none; height: 4px; background: var(--gray3); outline: none; border-radius: 0; }
+.calc-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--yellow); border-radius: 50%; cursor: none; }
+.calc-slider-val { font-family: var(--font-display); font-size: 32px; color: var(--yellow); margin-top: 8px; }
+.calc-result { background: var(--black); border: 1px solid var(--border); padding: 32px; margin-top: 32px; }
+.calc-result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.cr-val { font-family: var(--font-display); font-size: 36px; color: var(--yellow); line-height: 1; }
+.cr-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-top: 6px; }
+
+@keyframes coin-float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-16px);} }
+@keyframes ring-pulse { 0%,100%{opacity:0.2;transform:scale(1);}50%{opacity:0.05;transform:scale(1.04);} }
+
+@media(max-width:900px){
+  .page-hero,.token-overview,.dist-section,.utility-section,.calc-section{padding-left:24px;padding-right:24px;}
+  .token-overview,.dist-grid{grid-template-columns:1fr;}
+  .utility-grid{grid-template-columns:1fr 1fr;}
+  .calc-result-grid{grid-template-columns:1fr;}
+  .coin-ring{display:none;}
+}
+@media(max-width:600px){
+  .utility-grid{grid-template-columns:1fr;}
+  .token-quick-stats{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="grid-texture" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+<section class="page-hero">
+  <div class="tag reveal">The Token</div>
+  <h1 class="section-title reveal">THE<br><span class="hl">$WATT</span><br><span class="ol">TOKEN</span></h1>
+  <p style="font-size:18px;line-height:1.85;color:var(--gray5);max-width:560px;margin-top:32px;" class="reveal">Not speculation. Not a meme. A utility token backed entirely by verified real-world renewable energy generation — the first of its kind globally.</p>
+</section>
+
+<!-- TOKEN OVERVIEW -->
+<section class="token-overview">
+  <div class="token-coin-wrap reveal">
+    <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+      <div class="coin-ring"></div>
+      <div class="coin-ring"></div>
+      <div class="token-coin" style="background:none;box-shadow:none;width:auto;height:auto;animation:coin-float 5s ease-in-out infinite;"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--coin" style="animation:discGlow 3.5s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(245,197,24,0.4));"></div>
+    </div>
+    <div class="token-quick-stats">
+      <div class="tqs"><div class="tqs-val">ERC-20</div><div class="tqs-label">Token Standard</div></div>
+      <div class="tqs"><div class="tqs-val">Base</div><div class="tqs-label">Network</div></div>
+      <div class="tqs"><div class="tqs-val">$0.01</div><div class="tqs-label">Avg Gas Fee</div></div>
+      <div class="tqs"><div class="tqs-val">0%</div><div class="tqs-label">VC Presale</div></div>
+    </div>
+  </div>
+  <div class="token-info reveal">
+    <h2>PURE<br><span style="color:var(--yellow)">UTILITY.</span><br>REAL VALUE.</h2>
+    <table class="token-table">
+      <tr><td>Token Name</td><td class="td-highlight">$WATT</td></tr>
+      <tr><td>Total Supply</td><td class="td-highlight">1,000,000,000</td></tr>
+      <tr><td>Blockchain</td><td>Base (Ethereum L2)</td></tr>
+      <tr><td>Standard</td><td>ERC-20</td></tr>
+      <tr><td>Earning Rate</td><td class="td-highlight">1 $WATT per 1 kWh</td></tr>
+      <tr><td>Inflation</td><td class="td-highlight">Zero — Fixed Supply</td></tr>
+      <tr><td>VC Presale</td><td class="td-highlight">None — 0%</td></tr>
+      <tr><td>Team Vesting</td><td>4 years, 1-year cliff</td></tr>
+      <tr><td>Governance</td><td>On-chain DAO voting</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- DISTRIBUTION -->
+<section class="dist-section">
+  <div class="tag reveal">Token Distribution</div>
+  <h2 class="section-title reveal">WHERE EVERY<br><span class="hl">TOKEN</span><br><span class="ol">GOES</span></h2>
+  <div class="dist-grid">
+    <div class="dist-bars reveal">
+      <div class="dist-item">
+        <div class="dist-item-header"><span class="dist-item-name">User Rewards (Energy Earned)</span><span class="dist-item-pct">60%</span></div>
+        <div class="dist-track"><div class="dist-fill c1" style="width:0%" data-width="60%"></div></div>
+        <div class="dist-item-detail">600,000,000 $WATT · Earned by generating clean energy</div>
+      </div>
+      <div class="dist-item">
+        <div class="dist-item-header"><span class="dist-item-name">Ecosystem & Grants</span><span class="dist-item-pct">15%</span></div>
+        <div class="dist-track"><div class="dist-fill c2" style="width:0%" data-width="15%"></div></div>
+        <div class="dist-item-detail">150,000,000 $WATT · Developer grants, partnerships</div>
+      </div>
+      <div class="dist-item">
+        <div class="dist-item-header"><span class="dist-item-name">Founding Team</span><span class="dist-item-pct">10%</span></div>
+        <div class="dist-track"><div class="dist-fill c3" style="width:0%" data-width="10%"></div></div>
+        <div class="dist-item-detail">100,000,000 $WATT · 4-year vesting, 1-year cliff</div>
+      </div>
+      <div class="dist-item">
+        <div class="dist-item-header"><span class="dist-item-name">Global Liquidity Pool</span><span class="dist-item-pct">10%</span></div>
+        <div class="dist-track"><div class="dist-fill c4" style="width:0%" data-width="10%"></div></div>
+        <div class="dist-item-detail">100,000,000 $WATT · DEX listings, market liquidity</div>
+      </div>
+      <div class="dist-item">
+        <div class="dist-item-header"><span class="dist-item-name">Community / SDG Fund</span><span class="dist-item-pct">5%</span></div>
+        <div class="dist-track"><div class="dist-fill c5" style="width:0%" data-width="5%"></div></div>
+        <div class="dist-item-detail">50,000,000 $WATT · Communities with no electricity, water, or schools</div>
+      </div>
+    </div>
+    <div class="dist-legend reveal">
+      <div class="legend-item c1">
+        <div class="legend-title">60% — User Rewards</div>
+        <div class="legend-desc">The largest allocation by far goes to the people doing the actual work — generating real clean energy. This is earned, never bought. Every token in this pool must be backed by a verified kilowatt-hour.</div>
+      </div>
+      <div class="legend-item c5">
+        <div class="legend-title">5% — Community SDG Fund</div>
+        <div class="legend-desc">50 million $WATT permanently reserved for communities with zero access to clean energy, clean water, and education. Governed by DAO. Recorded on-chain. Zero corruption possible.</div>
+      </div>
+      <div class="legend-item c2">
+        <div class="legend-title">15% — Ecosystem</div>
+        <div class="legend-desc">Grants for developers building on $WATT, partnerships with solar companies, government integrations, and research institutions studying clean energy adoption.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UTILITY -->
+<section class="utility-section">
+  <div class="tag reveal">Token Utility</div>
+  <h2 class="section-title reveal">SIX WAYS TO<br><span class="hl">USE</span><br><span class="ol">$WATT</span></h2>
+  <div class="utility-grid">
+    <div class="util-card reveal">
+      <div class="util-icon"><span data-icon="zap"></span></div>
+      <div class="util-title">EARN</div>
+      <div class="util-desc">Generate solar or other renewable energy. $WATT tokens arrive in your wallet automatically. No application. No approval. Just energy.</div>
+    </div>
+    <div class="util-card reveal">
+      <div class="util-icon"><span data-icon="coins"></span></div>
+      <div class="util-title">TRADE</div>
+      <div class="util-desc">$WATT is listed on decentralized exchanges including Uniswap on Base. Trade freely, 24/7, with anyone in the world.</div>
+    </div>
+    <div class="util-card reveal">
+      <div class="util-icon"><span data-icon="lock"></span></div>
+      <div class="util-title">STAKE</div>
+      <div class="util-desc">Lock $WATT in the StakingVault smart contract to earn yield. Funded by protocol revenue — real income, not inflation.</div>
+    </div>
+    <div class="util-card reveal">
+      <div class="util-icon"><span data-icon="badge-check"></span></div>
+      <div class="util-title">GOVERN</div>
+      <div class="util-desc">$WATT holders vote on all major protocol decisions — reward rates, device approvals, treasury spending — via on-chain governance.</div>
+    </div>
+    <div class="util-card reveal">
+      <div class="util-icon"><span data-icon="globe"></span></div>
+      <div class="util-title">REDEEM</div>
+      <div class="util-desc">Exchange $WATT for electricity credits, mobile airtime, or local currency in supported markets. Real-world value without needing a crypto exchange.</div>
+    </div>
+    <div class="util-card reveal">
+      <div class="util-icon"><span data-icon="leaf"></span></div>
+      <div class="util-title">CARBON</div>
+      <div class="util-desc">Batches of $WATT backed by verified energy data can generate tradeable carbon offset certificates, connecting users to the global carbon credit market.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="calc-section">
+  <div class="tag reveal" style="justify-content:center;">Earning Calculator</div>
+  <h2 class="section-title reveal" style="text-align:center;">HOW MUCH<br><span class="hl">WILL YOU</span><br><span class="ol">EARN?</span></h2>
+  <div class="calc-box reveal">
+    <div class="calc-title">$WATT Earnings Estimator</div>
+    <div class="calc-row">
+      <div class="calc-label">Number of Solar Panels</div>
+      <input type="range" class="calc-slider" id="panels" min="1" max="20" value="5">
+      <div class="calc-slider-val"><span id="panelsVal">5</span> panels</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-label">Average Sun Hours Per Day</div>
+      <input type="range" class="calc-slider" id="sunhours" min="3" max="8" value="6" step="0.5">
+      <div class="calc-slider-val"><span id="sunhoursVal">6</span> hours/day</div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-label">Panel Wattage (Watts Each)</div>
+      <input type="range" class="calc-slider" id="wattage" min="200" max="600" value="350" step="50">
+      <div class="calc-slider-val"><span id="wattageVal">350</span>W per panel</div>
+    </div>
+    <div class="calc-result">
+      <div class="calc-result-grid">
+        <div><div class="cr-val" id="dailyKwh">10.5</div><div class="cr-label">kWh / Day</div></div>
+        <div><div class="cr-val" id="dailyWatt">10.5</div><div class="cr-label">$WATT / Day</div></div>
+        <div><div class="cr-val" id="monthlyWatt">315</div><div class="cr-label">$WATT / Month</div></div>
+      </div>
+    </div>
+    <p style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;color:var(--gray4);text-align:center;margin-top:16px;text-transform:uppercase;">Estimates only. Actual earnings depend on verified energy data from your WATT Meter.</p>
+  </div>
+</section>
+
+<section style="padding:80px;text-align:center;">
+  <h2 class="section-title reveal" style="font-size:clamp(36px,5vw,64px);">START<br><span class="hl">EARNING</span></h2>
+  <p style="font-size:16px;color:var(--gray5);max-width:400px;margin:24px auto 40px;line-height:1.8;" class="reveal">Join the waitlist. Be first when WATT Meters ship to your region.</p>
+  <a href="index.html#waitlist" class="btn btn-primary reveal"><span data-icon="zap"></span><span style="margin-left:10px;">Join the Waitlist</span></a>
+</section>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+<script>
+  // Calculator
+  function calcEarnings(){
+    const panels = parseInt(document.getElementById('panels').value);
+    const sun = parseFloat(document.getElementById('sunhours').value);
+    const wattage = parseInt(document.getElementById('wattage').value);
+    document.getElementById('panelsVal').textContent = panels;
+    document.getElementById('sunhoursVal').textContent = sun;
+    document.getElementById('wattageVal').textContent = wattage;
+    const daily = (panels * wattage * sun / 1000).toFixed(1);
+    document.getElementById('dailyKwh').textContent = daily;
+    document.getElementById('dailyWatt').textContent = daily;
+    document.getElementById('monthlyWatt').textContent = Math.round(daily * 30);
+  }
+  ['panels','sunhours','wattage'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', calcEarnings);
+  });
+
+  // Animate bars on scroll
+  const barObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.dist-fill').forEach(bar=>{
+          bar.style.width = bar.dataset.width;
+        });
+      }
+    });
+  },{threshold:0.2});
+  document.querySelectorAll('.dist-bars').forEach(el=>barObs.observe(el));
+</script>
+</body>
+</html>

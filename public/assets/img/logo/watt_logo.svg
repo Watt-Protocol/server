@@ -1,0 +1,18 @@
+<svg width="512" height="512" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="disc" cx="38%" cy="30%" r="75%">
+      <stop offset="0%"   stop-color="#FFF8CC"/>
+      <stop offset="28%"  stop-color="#F5C518"/>
+      <stop offset="62%"  stop-color="#D4920E"/>
+      <stop offset="100%" stop-color="#8A5500"/>
+    </radialGradient>
+    <mask id="boltMask">
+      <rect width="128" height="128" fill="white"/>
+      <path d="M73 20 L48 64 H66 L58 108 L82 60 H65 Z" fill="black"/>
+    </mask>
+  </defs>
+  <circle cx="64" cy="64" r="64" fill="#070400"/>
+  <circle cx="64" cy="64" r="56" fill="url(#disc)" mask="url(#boltMask)"/>
+  <path d="M73 20 L48 64 H66 L58 108 L82 60 H65 Z" fill="#070400"/>
+  <circle cx="64" cy="64" r="62" stroke="#F5C518" stroke-width="1.5" stroke-opacity="0.35" fill="none"/>
+</svg>

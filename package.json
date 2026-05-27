@@ -1,0 +1,24 @@
+{
+  "name": "watt-protocol-server",
+  "version": "0.1.0",
+  "description": "WATT Protocol website and waitlist API",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.99.0",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.3.1",
+    "geoip-lite": "^2.0.0",
+    "nanoid": "^5.0.7",
+    "nodemailer": "^8.0.2",
+    "nodemon": "^3.1.14"
+  }
+}

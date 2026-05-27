@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Primary sitemap path.
+Sitemap: /sitemap.xml

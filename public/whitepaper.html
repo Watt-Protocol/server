@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="$WATT Protocol Whitepaper — Technical and economic documentation for the global clean energy rewards protocol.">
+<title>Whitepaper — $WATT Protocol</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="article">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="$WATT Protocol Whitepaper">
+<meta property="og:description" content="Full technical and economic documentation. Eight phases from Nigerian prototype to global clean energy infrastructure on Base Network.">
+<meta property="og:url"         content="/whitepaper.html">
+<meta property="og:image"       content="/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height"content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="$WATT Protocol Whitepaper">
+<meta name="twitter:description" content="Full technical and economic documentation. From Nigerian prototype to global clean energy infrastructure.">
+<meta name="twitter:image"       content="/og-image.png">
+<!-- Canonical -->
+<link rel="canonical" href="/whitepaper.html">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-hero { padding: 160px 80px 80px; position: relative; overflow: hidden; background: var(--gray1); }
+
+/* Whitepaper layout */
+.wp-layout { display: grid; grid-template-columns: 280px 1fr; gap: 0; min-height: 80vh; }
+.wp-sidebar { background: var(--gray1); border-right: 1px solid var(--border); padding: 48px 32px; position: sticky; top: 72px; height: calc(100vh - 72px); overflow-y: auto; }
+.wp-sidebar-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray4); margin-bottom: 24px; }
+.wp-toc { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.wp-toc-item a {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--gray5);
+  transition: all 0.25s;
+  border-left: 2px solid transparent;
+}
+.wp-toc-item a:hover, .wp-toc-item a.active { color: var(--white); border-left-color: var(--yellow); background: rgba(245,230,66,0.04); }
+.wp-toc-num { font-family: var(--font-mono); font-size: 10px; color: var(--orange); min-width: 24px; }
+.wp-meta { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
+.wp-meta-item label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); display: block; margin-bottom: 4px; }
+.wp-meta-item span { font-size: 13px; font-weight: 500; }
+
+/* Main content */
+.wp-content { padding: 60px 80px; }
+.wp-section { padding-bottom: 60px; border-bottom: 1px solid var(--border); margin-bottom: 60px; scroll-margin-top: 100px; }
+.wp-section:last-child { border-bottom: none; }
+.wp-section-num { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+.wp-section h2 { font-family: var(--font-display); font-size: clamp(28px, 4vw, 48px); color: var(--white); margin-bottom: 24px; letter-spacing: 1px; }
+.wp-section .lead { font-size: 16px; line-height: 1.85; color: var(--gray5); font-style: italic; border-left: 3px solid var(--yellow); padding-left: 20px; margin-bottom: 28px; }
+.wp-section p { font-size: 14px; line-height: 1.85; color: var(--gray5); margin-bottom: 16px; }
+.wp-section p strong { color: var(--white); }
+.wp-section h3 { font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin: 32px 0 12px; }
+.wp-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 24px 0; }
+.wp-table thead tr { background: var(--black); }
+.wp-table thead th { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--yellow); padding: 12px 16px; text-align: left; }
+.wp-table tbody tr { border-bottom: 1px solid var(--border); }
+.wp-table tbody tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.wp-table tbody td { padding: 12px 16px; color: var(--gray5); vertical-align: top; }
+.wp-table tbody td:first-child { color: var(--white); font-weight: 500; }
+.callout { background: rgba(245,230,66,0.05); border-left: 3px solid var(--yellow); padding: 24px 28px; margin: 24px 0; }
+.callout p { margin: 0; color: rgba(242,239,232,0.8); }
+.wp-formula { background: var(--black); border: 1px solid var(--border); padding: 28px; text-align: center; font-family: var(--font-display); font-size: 28px; color: var(--yellow); letter-spacing: 2px; margin: 24px 0; }
+.wp-formula span { color: var(--orange); }
+.dist-bar-wp { display: flex; flex-direction: column; gap: 10px; margin: 20px 0; }
+.dbw-row { display: flex; align-items: center; gap: 12px; }
+.dbw-label { font-size: 12px; min-width: 200px; color: var(--gray5); }
+.dbw-track { flex: 1; height: 8px; background: var(--gray3); }
+.dbw-fill { height: 100%; }
+.dbw-pct { font-family: var(--font-mono); font-size: 11px; color: var(--yellow); min-width: 36px; text-align: right; }
+
+/* Download CTA */
+.download-bar { background: var(--black); border: 1px solid var(--border); padding: 32px 40px; display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 60px 0; flex-wrap: wrap; }
+.download-info {}
+.download-title { font-family: var(--font-display); font-size: 22px; color: var(--yellow); margin-bottom: 4px; }
+.download-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); }
+
+@media(max-width:1100px){
+  .wp-layout{grid-template-columns:1fr;}
+  .wp-sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+  .wp-toc{flex-direction:row;flex-wrap:wrap;}
+  .wp-content{padding:40px 24px;}
+}
+@media(max-width:900px){
+  .page-hero{padding-left:24px;padding-right:24px;}
+}
+</style>
+</head>
+<body>
+<div class="grid-texture" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+<section class="page-hero">
+  <div style="margin-bottom:32px;" class="reveal"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--lg"></div>
+  <div class="tag reveal" style="color:var(--gray5);">Technical Documentation</div>
+  <h1 class="section-title reveal">WHITE<br><span class="hl">PAPER</span></h1>
+  <p style="font-size:17px;line-height:1.85;color:var(--gray5);max-width:540px;margin-top:24px;" class="reveal">The complete technical and economic documentation for $WATT Protocol v1.0. For investors, grant bodies, developers, and the curious.</p>
+  <div style="margin-top:32px;" class="reveal">
+    <a href="watt-protocol-whitepaper.pdf" class="btn btn-primary" style="margin-right:16px;" download>⬇ Download PDF</a>
+    <a href="#abstract" class="btn btn-outline">Read Online →</a>
+  </div>
+</section>
+
+<div class="wp-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="wp-sidebar">
+    <div style="text-align:center;margin-bottom:28px;"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--md"></div><div class="wp-sidebar-title">Contents</div>
+    <ul class="wp-toc">
+      <li class="wp-toc-item"><a href="#abstract"><span class="wp-toc-num">01</span>Abstract</a></li>
+      <li class="wp-toc-item"><a href="#problem"><span class="wp-toc-num">02</span>The Problem</a></li>
+      <li class="wp-toc-item"><a href="#solution"><span class="wp-toc-num">03</span>The Solution</a></li>
+      <li class="wp-toc-item"><a href="#hardware"><span class="wp-toc-num">04</span>WATT Smart Meter</a></li>
+      <li class="wp-toc-item"><a href="#protocol"><span class="wp-toc-num">05</span>Protocol Architecture</a></li>
+      <li class="wp-toc-item"><a href="#tokenomics"><span class="wp-toc-num">06</span>Tokenomics</a></li>
+      <li class="wp-toc-item"><a href="#community"><span class="wp-toc-num">07</span>Community & SDGs</a></li>
+      <li class="wp-toc-item"><a href="#market"><span class="wp-toc-num">08</span>Market Opportunity</a></li>
+      <li class="wp-toc-item"><a href="#revenue"><span class="wp-toc-num">09</span>Revenue Model</a></li>
+      <li class="wp-toc-item"><a href="#roadmap"><span class="wp-toc-num">10</span>Roadmap</a></li>
+      <li class="wp-toc-item"><a href="#risks"><span class="wp-toc-num">11</span>Risk Factors</a></li>
+      <li class="wp-toc-item"><a href="#conclusion"><span class="wp-toc-num">12</span>Conclusion</a></li>
+    </ul>
+    <div class="wp-meta">
+      <div class="wp-meta-item"><label>Version</label><span>1.0 — 2025</span></div>
+      <div class="wp-meta-item"><label>Token</label><span style="color:var(--yellow);">$WATT</span></div>
+      <div class="wp-meta-item"><label>Network</label><span>Base (EVM L2)</span></div>
+      <div class="wp-meta-item"><label>Supply</label><span>1,000,000,000</span></div>
+      <div class="wp-meta-item"><label>Status</label><span style="color:var(--green);">● Building</span></div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="wp-content">
+
+    <div class="download-bar">
+      <div style="display:flex;align-items:center;gap:20px;"><div><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--md"></div><div class="download-info">
+        <div class="download-title">$WATT Protocol Whitepaper v1.0</div>
+        <div class="download-meta">12 Sections · 2025 · Confidential — Not Financial Advice</div>
+      </div>
+      </div><a href="watt-protocol-whitepaper.pdf" class="btn btn-primary" download>⬇ Save as PDF</a>
+    </div>
+
+    <div class="wp-section" id="abstract">
+      <div class="wp-section-num">Section 01</div>
+      <h2>Abstract</h2>
+      <p class="lead">$WATT Protocol introduces the world's first universal Energy-to-Earn ecosystem — automatically rewarding individuals for generating renewable energy using blockchain technology.</p>
+      <p>The global transition to clean energy is one of the most urgent challenges facing humanity. Despite the clear environmental imperative, ordinary individuals who install solar panels, generate wind energy, or adopt other renewable sources receive <strong>no direct financial reward</strong> for their contribution to decarbonizing the planet. Carbon credits flow to large corporations. Energy savings flow to utilities. The data generated by millions of small producers flows to governments. The individual is left out entirely.</p>
+      <p>$WATT Protocol changes this permanently. By deploying a compact IoT smart meter device alongside a transparent on-chain reward mechanism, $WATT automatically issues ERC-20 tokens to any individual or entity generating verified renewable energy — anywhere in the world, at any scale, without intermediaries.</p>
+      <div class="callout"><p>Every kilowatt-hour of clean energy generated anywhere on Earth deserves a financial reward. $WATT makes this possible for the first time — automatically, verifiably, and without permission from any central authority.</p></div>
+    </div>
+
+    <div class="wp-section" id="problem">
+      <div class="wp-section-num">Section 02</div>
+      <h2>The Problem</h2>
+      <p class="lead">Clean energy benefits the entire planet, but the people who generate it are never compensated for that global benefit. This is a fundamental market failure.</p>
+      <h3>Three Structural Failures</h3>
+      <p><strong>No individual carbon market access.</strong> Carbon credit markets require scale, certification, and institutional infrastructure that ordinary people cannot access. A household cannot sell carbon offsets even if their solar panels generate verifiable clean energy data.</p>
+      <p><strong>No verifiable individual energy data layer.</strong> There is no universal, tamper-proof system for recording and verifying individual clean energy generation at scale. Without verified data, rewards cannot be issued fairly.</p>
+      <p><strong>No trustless reward mechanism.</strong> Even if data existed, there is no system to automatically convert that data into financial value without a centralized intermediary that can be gamed, corrupted, or exclude participants.</p>
+      <table class="wp-table">
+        <thead><tr><th>The Gap</th><th>Current Reality</th><th>$WATT Solution</th></tr></thead>
+        <tbody>
+          <tr><td>Individual carbon rewards</td><td>Corporations only</td><td>Every user, automatic</td></tr>
+          <tr><td>Energy data verification</td><td>No universal standard</td><td>Cryptographic + oracle</td></tr>
+          <tr><td>Financial infrastructure</td><td>Banks required</td><td>Wallet + Base network</td></tr>
+          <tr><td>Community impact</td><td>Zero</td><td>5% SDG Community Fund</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="solution">
+      <div class="wp-section-num">Section 03</div>
+      <h2>The Solution</h2>
+      <p class="lead">Three layers working together: a hardware device, a verification protocol, and a reward token — creating a seamless energy-to-earn experience for anyone on Earth.</p>
+      <div class="wp-formula">1 KWh Generated <span>=</span> 1 $WATT Earned</div>
+      <p><strong>Layer 1 — The WATT Smart Meter.</strong> A compact, weatherproof IoT device that attaches to any solar panel or inverter. Measures energy with Class 1 accuracy, cryptographically signs every reading, and transmits verified data to the blockchain every 15 minutes.</p>
+      <p><strong>Layer 2 — The Verification Protocol.</strong> Smart contracts on Base (Ethereum L2) that receive signed energy data, verify cryptographic signatures, cross-reference with oracle data, and trigger automatic reward distribution. Fully transparent and open source.</p>
+      <p><strong>Layer 3 — The $WATT Token.</strong> An ERC-20 utility token earned at 1 $WATT per verified kWh. Immediately tradeable, stakeable, and redeemable for real-world value globally.</p>
+    </div>
+
+    <div class="wp-section" id="hardware">
+      <div class="wp-section-num">Section 04</div>
+      <h2>WATT Smart Meter</h2>
+      <p class="lead">The hardware is the foundation. Without reliable, tamper-proof physical measurement, no token reward system can be trusted.</p>
+      <table class="wp-table">
+        <thead><tr><th>Specification</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Accuracy</td><td>Class 1 (±1%) — IEC 62053 compliant</td></tr>
+          <tr><td>Standards</td><td>IEC 62053 (International) + ANSI C12 (North America)</td></tr>
+          <tr><td>Connectivity</td><td>WiFi 2.4GHz + GSM/4G — global SIM support</td></tr>
+          <tr><td>Voltage Range</td><td>80V–260V AC / 12V–48V DC</td></tr>
+          <tr><td>Frequency</td><td>50Hz and 60Hz (universal)</td></tr>
+          <tr><td>Data Cadence</td><td>Every 15 minutes — signed and committed on-chain</td></tr>
+          <tr><td>Security</td><td>Hardware tamper seal + ECDSA cryptographic signing</td></tr>
+          <tr><td>Install Time</td><td>Under 30 minutes — no rewiring required</td></tr>
+          <tr><td>Prototype Cost</td><td>~$56 USD (Raspberry Pi Zero 2W + sensors)</td></tr>
+          <tr><td>Retail Price</td><td>$80–$120 USD (manufacturing cost ~$25 at scale)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="protocol">
+      <div class="wp-section-num">Section 05</div>
+      <h2>Protocol Architecture</h2>
+      <p class="lead">$WATT is built on Base — Coinbase's Ethereum L2 — chosen for sub-cent transaction fees, EVM compatibility, and institutional backing.</p>
+      <h3>Smart Contracts</h3>
+      <table class="wp-table">
+        <thead><tr><th>Contract</th><th>Function</th></tr></thead>
+        <tbody>
+          <tr><td>WATTToken.sol</td><td>ERC-20 token. Fixed supply of 1B $WATT. Minting controlled exclusively by RewardDistributor.</td></tr>
+          <tr><td>DeviceRegistry.sol</td><td>Stores verified device public keys. Only registered, non-tampered devices can submit energy data.</td></tr>
+          <tr><td>EnergyOracle.sol</td><td>Receives signed energy readings. Verifies ECDSA signatures. Rejects duplicate or tampered submissions.</td></tr>
+          <tr><td>RewardDistributor.sol</td><td>Calculates $WATT rewards. Mints and distributes tokens to user wallets automatically.</td></tr>
+          <tr><td>StakingVault.sol</td><td>Allows $WATT holders to stake tokens for yield funded by protocol revenue.</td></tr>
+          <tr><td>CarbonRegistry.sol</td><td>Aggregates verified energy data for carbon credit certification. Issues on-chain VCUs.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="tokenomics">
+      <div class="wp-section-num">Section 06</div>
+      <h2>Tokenomics</h2>
+      <p class="lead">$WATT is a genuine utility token. Its value is derived from real-world clean energy production — not speculation. Supply is fixed. Earning is earned, not bought.</p>
+      <h3>Token Distribution</h3>
+      <div class="dist-bar-wp">
+        <div class="dbw-row"><div class="dbw-label">User Rewards (Energy Earned)</div><div class="dbw-track"><div class="dbw-fill" style="width:60%;background:var(--yellow);height:100%;"></div></div><div class="dbw-pct">60%</div></div>
+        <div class="dbw-row"><div class="dbw-label">Ecosystem & Grants</div><div class="dbw-track"><div class="dbw-fill" style="width:15%;background:var(--orange);height:100%;"></div></div><div class="dbw-pct">15%</div></div>
+        <div class="dbw-row"><div class="dbw-label">Founding Team (4yr vest)</div><div class="dbw-track"><div class="dbw-fill" style="width:10%;background:var(--green);height:100%;"></div></div><div class="dbw-pct">10%</div></div>
+        <div class="dbw-row"><div class="dbw-label">Liquidity Pool</div><div class="dbw-track"><div class="dbw-fill" style="width:10%;background:var(--gray4);height:100%;"></div></div><div class="dbw-pct">10%</div></div>
+        <div class="dbw-row"><div class="dbw-label">Community / SDG Fund</div><div class="dbw-track"><div class="dbw-fill" style="width:5%;background:var(--gray5);height:100%;"></div></div><div class="dbw-pct">5%</div></div>
+      </div>
+      <div class="callout"><p><strong>Zero VC presale.</strong> No tokens sold before launch. No early investor dumps. The first $WATT tokens in circulation will be earned by people generating real renewable energy.</p></div>
+    </div>
+
+    <div class="wp-section" id="community">
+      <div class="wp-section-num">Section 07</div>
+      <h2>Community & SDG Impact</h2>
+      <p class="lead">5% of all $WATT tokens — 50 million tokens — are permanently reserved for communities with zero access to clean water, electricity, and schools. DAO governed. On-chain transparent.</p>
+      <p>The Community Impact Fund directly aligns with five UN Sustainable Development Goals: SDG 1 (No Poverty), SDG 4 (Quality Education), SDG 6 (Clean Water), SDG 7 (Affordable Clean Energy), and SDG 13 (Climate Action). This makes $WATT one of the most grant-eligible projects in the Web3 space.</p>
+      <table class="wp-table">
+        <thead><tr><th>Fund Allocation</th><th>Amount</th><th>SDG Target</th></tr></thead>
+        <tbody>
+          <tr><td>Clean Energy Access</td><td>40% — 20M $WATT</td><td>SDG 7</td></tr>
+          <tr><td>Schools & Education</td><td>30% — 15M $WATT</td><td>SDG 4</td></tr>
+          <tr><td>Clean Water Projects</td><td>30% — 15M $WATT</td><td>SDG 6</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="market">
+      <div class="wp-section-num">Section 08</div>
+      <h2>Market Opportunity</h2>
+      <p class="lead">$WATT sits at the intersection of three of the fastest-growing global markets of the 21st century.</p>
+      <table class="wp-table">
+        <thead><tr><th>Market</th><th>Size / Projection</th><th>$WATT Relevance</th></tr></thead>
+        <tbody>
+          <tr><td>Renewable Energy</td><td>$2.15T by 2030</td><td>Core protocol market</td></tr>
+          <tr><td>Carbon Credits</td><td>$50B by 2030</td><td>CarbonRegistry.sol</td></tr>
+          <tr><td>Web3 / DeFi</td><td>$3T+ peak</td><td>Token infrastructure</td></tr>
+          <tr><td>Solar Households</td><td>1.6B by 2030</td><td>Primary user base</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="revenue">
+      <div class="wp-section-num">Section 09</div>
+      <h2>Revenue Model</h2>
+      <p class="lead">Seven revenue streams ensuring long-term sustainability independent of token price appreciation.</p>
+      <table class="wp-table">
+        <thead><tr><th>Stream</th><th>Mechanism</th></tr></thead>
+        <tbody>
+          <tr><td>Hardware Sales</td><td>$80–$120 retail per WATT Meter (~$25 manufacturing cost at scale)</td></tr>
+          <tr><td>Protocol Fee</td><td>2% on all $WATT token transactions on-platform</td></tr>
+          <tr><td>Carbon Credits</td><td>Aggregate user data → sell CO₂ offsets at $15–$75 per tonne</td></tr>
+          <tr><td>Data Licensing</td><td>Anonymized energy data to governments, grid operators, researchers</td></tr>
+          <tr><td>Enterprise API</td><td>Solar installers and utilities pay to integrate $WATT rewards</td></tr>
+          <tr><td>Staking Yield</td><td>Protocol revenue funds staking rewards — drives permanent token demand</td></tr>
+          <tr><td>White-Label</td><td>License protocol to national utilities and governments</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="roadmap">
+      <div class="wp-section-num">Section 10</div>
+      <h2>Roadmap</h2>
+      <p class="lead">Eight phases taking $WATT from a Nigerian prototype to global clean energy infrastructure.</p>
+      <table class="wp-table">
+        <thead><tr><th>Phase</th><th>Timeline</th><th>Key Milestones</th></tr></thead>
+        <tbody>
+          <tr><td>01 Foundation</td><td>Month 1–2</td><td>Landing page, X account, waitlist, co-founder search</td></tr>
+          <tr><td>02 Prototype</td><td>Month 3–4</td><td>WATT Meter built, Base testnet ERC-20, first end-to-end demo</td></tr>
+          <tr><td>03 Africa Pilot</td><td>Month 5–6</td><td>20–50 meters installed Nigeria/Ghana, first on-chain energy data</td></tr>
+          <tr><td>04 Grant Funding</td><td>Month 6–9</td><td>Ethereum Foundation, World Bank, EU Horizon applications</td></tr>
+          <tr><td>05 Asia Expansion</td><td>Month 9–15</td><td>India, Indonesia pilot; Hindi, Bahasa app localization</td></tr>
+          <tr><td>06 Mainnet Launch</td><td>Month 12–18</td><td>Base mainnet, Uniswap listing, carbon credit marketplace</td></tr>
+          <tr><td>07 Protocol Scale</td><td>Year 2–3</td><td>1M+ meters, Series A ($5M–$20M), major exchange listings</td></tr>
+          <tr><td>08 Global Standard</td><td>Year 3–5</td><td>10M+ users, 50+ countries, UN recognition, IPO pathway</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="risks">
+      <div class="wp-section-num">Section 11</div>
+      <h2>Risk Factors</h2>
+      <p class="lead">$WATT is committed to transparent disclosure of all material risks.</p>
+      <table class="wp-table">
+        <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td>Regulatory</td><td>Register in crypto-friendly jurisdiction. Structure $WATT as utility token. Engage Web3 legal counsel before mainnet.</td></tr>
+          <tr><td>Hardware Complexity</td><td>Prototype first. Partner with established Shenzhen manufacturers before scaling. Modular design for supply chain flexibility.</td></tr>
+          <tr><td>Data Integrity</td><td>ECDSA hardware signing + Chainlink oracle validation + physical audit network — three independent fraud layers.</td></tr>
+          <tr><td>Smart Contract Bugs</td><td>Multiple independent audits before mainnet. Bug bounty program. Emergency pause mechanism.</td></tr>
+          <tr><td>Token Volatility</td><td>Real-world utility (electricity credits, airtime) provides price floor independent of speculation.</td></tr>
+          <tr><td>Big Tech Competition</td><td>Community ownership (60% to users) + hardware moat + first-mover network effects create durable competitive advantage.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wp-section" id="conclusion">
+      <div class="wp-section-num">Section 12</div>
+      <h2>Conclusion</h2>
+      <p class="lead">$WATT Protocol is not a crypto project that mentions clean energy. It is clean energy infrastructure that uses blockchain.</p>
+      <p>For the first time in history, every individual on Earth who generates renewable energy will have access to a direct, automatic, and transparent financial reward for doing so. A solar panel owner in Abuja earns the same protocol rewards as one in Amsterdam. A wind energy community in rural India participates in the same global carbon market as a Fortune 500 corporation.</p>
+      <p>We start in Africa because Africa is where the need is greatest, where the solar potential is largest, and where we know the landscape. But we build for the world because climate change respects no borders — and neither does $WATT.</p>
+      <div class="callout" style="border-left-color:var(--green);background:rgba(0,200,83,0.04);">
+        <div style="display:flex;align-items:center;gap:20px;justify-content:center;">
+          <span data-icon="zap" data-icon-class="wp-conclusion-zap"></span>
+          <p style="font-family:var(--font-display);font-size:20px;letter-spacing:1px;">ENERGY TO EARN · BORN IN AFRICA · BUILT FOR THE WORLD</p>
+          <span data-icon="zap" data-icon-class="wp-conclusion-zap"></span>
+        </div>
+      </div>
+      <p style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--gray4);text-align:center;margin-top:32px;text-transform:uppercase;">This document is for informational purposes only. Not financial advice. $WATT tokens are utility tokens. Consult a qualified advisor before making any financial decisions.</p>
+    </div>
+
+  </main>
+</div>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+<script>
+  // Active TOC on scroll
+  const sections = document.querySelectorAll('.wp-section');
+  const tocLinks = document.querySelectorAll('.wp-toc-item a');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        tocLinks.forEach(l=>l.classList.remove('active'));
+        const active = document.querySelector(`.wp-toc-item a[href="#${e.target.id}"]`);
+        if(active) active.classList.add('active');
+      }
+    });
+  },{threshold:0.3,rootMargin:'-80px 0px 0px 0px'});
+  sections.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>

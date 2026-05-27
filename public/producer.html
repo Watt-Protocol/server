@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Producer — $WATT Protocol</title>
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+  <script src="shared.js"></script>
+  <main style="max-width:640px;margin:120px auto 80px;padding:24px;">
+    <h1 style="font-family:var(--font-display);color:var(--yellow);">Producer energy</h1>
+    <p style="color:var(--gray5);">Sign in on the main site first, then view your testnet rewards.</p>
+    <pre id="out" style="background:#111;padding:16px;border:1px solid var(--border);overflow:auto;font-size:12px;"></pre>
+  </main>
+  <script>
+    fetch('/api/producer/energy-summary', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { document.getElementById('out').textContent = JSON.stringify(d, null, 2); })
+      .catch(e => { document.getElementById('out').textContent = e.message + ' — sign in at /dashboard.html'; });
+  </script>
+</body>
+</html>

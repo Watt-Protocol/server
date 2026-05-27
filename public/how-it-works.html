@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="How $WATT Protocol works — Smart meter, blockchain verification, and token rewards explained.">
+<title>How It Works — $WATT Protocol</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="How It Works — $WATT Protocol">
+<meta property="og:description" content="Install a WATT Smart Meter → generate clean energy → earn $WATT tokens automatically, every 15 minutes, on-chain.">
+<meta property="og:url"         content="/how-it-works.html">
+<meta property="og:image"       content="/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height"content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="How It Works — $WATT Protocol">
+<meta name="twitter:description" content="Install a WATT Smart Meter → generate clean energy → earn $WATT tokens automatically, every 15 minutes, on-chain.">
+<meta name="twitter:image"       content="/og-image.png">
+<!-- Canonical -->
+<link rel="canonical" href="/how-it-works.html">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-hero { padding: 160px 80px 100px; position: relative; overflow: hidden; }
+.page-hero-glow { position:absolute;top:-20%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(245,230,66,0.06) 0%,transparent 70%);pointer-events:none; }
+.page-hero-layout { display: grid; grid-template-columns: 1fr auto; gap: 60px; align-items: start; }
+.page-hero-copy { max-width: 620px; }
+
+.steps-section { padding: 0 80px 100px; }
+.step-block {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr;
+  gap: 60px;
+  padding: 60px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.step-block:last-child { border-bottom: none; }
+.step-num-big { font-family: var(--font-display); font-size: 96px; color: rgba(245,230,66,0.1); line-height: 1; }
+.step-title { font-family: var(--font-display); font-size: 48px; color: var(--yellow); margin-bottom: 20px; letter-spacing: 1px; }
+.step-desc { font-size: 15px; line-height: 1.85; color: var(--gray5); margin-bottom: 24px; }
+.step-details { display: flex; flex-direction: column; gap: 12px; }
+.step-detail { display: flex; gap: 14px; align-items: flex-start; font-size: 14px; color: var(--gray5); line-height: 1.6; }
+.step-detail::before { content: '•'; flex-shrink: 0; margin-top: 2px; color: var(--yellow); }
+.step-visual { background: var(--gray2); padding: 36px; display: flex; flex-direction: column; gap: 16px; }
+.spec-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.spec-row:last-child { border-bottom: none; }
+.spec-key { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); }
+.spec-val { font-size: 13px; color: var(--white); font-weight: 500; text-align: right; }
+
+/* Security section */
+.security-section { padding: 100px 80px; background: var(--gray1); }
+.security-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
+.sec-card { background: var(--gray2); padding: 40px 32px; border-top: 3px solid var(--border); transition: border-color 0.3s; }
+.sec-card:hover { border-top-color: var(--yellow); }
+.sec-icon { font-size: 22px; margin-bottom: 14px; }
+.sec-title { font-family: var(--font-display); font-size: 26px; color: var(--yellow); margin-bottom: 12px; letter-spacing: 1px; }
+.sec-desc { font-size: 14px; line-height: 1.75; color: var(--gray5); }
+
+/* Formula */
+.formula-section { padding: 100px 80px; text-align: center; }
+.formula-box {
+  background: var(--gray1);
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  gap: 32px;
+  padding: 48px 64px;
+  margin: 40px auto;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.formula-part { text-align: center; }
+.formula-val { font-family: var(--font-display); font-size: 64px; color: var(--yellow); line-height: 1; }
+.formula-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-top: 8px; }
+.formula-eq { font-family: var(--font-display); font-size: 48px; color: var(--orange); }
+
+/* Data flow */
+.flow-section { padding: 0 80px 100px; }
+.flow-visual { display: flex; align-items: stretch; margin-top: 60px; }
+.flow-node {
+  flex: 1;
+  background: var(--gray2);
+  padding: 40px 28px;
+  text-align: center;
+  position: relative;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.flow-node:hover,
+.flow-node:focus-within {
+  background: var(--yellow);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(245,230,66,0.12);
+}
+.flow-node:hover .fn-title,
+.flow-node:focus-within .fn-title { color: var(--black); }
+.flow-node:hover .fn-desc,
+.flow-node:focus-within .fn-desc { color: rgba(8,10,14,0.7); }
+.fn-icon { font-size: 24px; margin-bottom: 12px; }
+.fn-title { font-family: var(--font-display); font-size: 20px; color: var(--white); margin-bottom: 8px; letter-spacing: 1px; }
+.fn-desc { font-size: 12px; line-height: 1.6; color: var(--gray5); }
+.flow-arr { background: var(--gray3); display: flex; align-items: center; justify-content: center; padding: 0 14px; font-family: var(--font-display); font-size: 22px; color: var(--yellow); }
+
+@media(max-width:900px){
+  .page-hero,.steps-section,.security-section,.formula-section,.flow-section{padding-left:24px;padding-right:24px;}
+  .page-hero-layout{grid-template-columns:1fr;gap:28px;}
+  .step-block{grid-template-columns:1fr;gap:24px;}
+  .step-num-big{font-size:48px;}
+  .security-grid{grid-template-columns:1fr;}
+  .flow-visual{flex-direction:column;}
+  .flow-arr{padding:12px 0;transform:rotate(90deg);}
+}
+</style>
+</head>
+<body>
+<div class="grid-texture" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+<section class="page-hero">
+  <div class="page-hero-glow"></div>
+  <div class="page-hero-layout">
+    <div class="page-hero-copy">
+      <div class="tag reveal">The Technology</div>
+      <h1 class="section-title reveal">HOW<br><span class="hl">$WATT</span><br><span class="ol">WORKS</span></h1>
+      <p style="font-size:18px;line-height:1.85;color:var(--gray5);max-width:560px;margin-top:32px;" class="reveal">Three layers working together — physical hardware, cryptographic verification, and automatic token rewards — creating a system where no single entity can cheat, steal, or exclude anyone.</p>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:60px;" class="reveal"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--lg"></div>
+  </div>
+</section>
+
+<!-- FORMULA -->
+<section class="formula-section" style="position:relative;">
+  <div style="text-align:center;margin-bottom:24px;"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--md"></div><div class="tag reveal" style="justify-content:center;">The Core Formula</div>
+  <div class="formula-box reveal">
+    <div class="formula-part">
+      <div class="formula-val">1</div>
+      <div class="formula-label">Kilowatt-Hour<br>Generated</div>
+    </div>
+    <div class="formula-eq">=</div>
+    <div class="formula-part">
+      <div class="formula-val" style="color:var(--orange);">1</div>
+      <div class="formula-label">$WATT Token<br>Earned</div>
+    </div>
+  </div>
+  <p style="font-size:15px;color:var(--gray5);max-width:500px;margin:0 auto;" class="reveal">Simple. Transparent. Automatic. Every kilowatt-hour of verified renewable energy you generate earns exactly one $WATT token — no fees, no delays, no permission required.</p>
+</section>
+
+<!-- DATA FLOW -->
+<section class="flow-section">
+  <div class="tag reveal">Data Pipeline</div>
+  <h2 class="section-title reveal" style="font-size:clamp(32px,4vw,56px);">FROM RENEWABLE<br>ENERGY TO <span class="hl">WALLET</span></h2>
+  <div class="flow-visual reveal">
+    <div class="flow-node">
+      <div class="fn-icon"><span data-icon="leaf"></span></div>
+      <div class="fn-title">Renewable Source</div>
+      <div class="fn-desc">Energy enters the pipeline from solar, wind, hydro, or hybrid systems.</div>
+    </div>
+    <div class="flow-arr"><span data-icon="arrow-right"></span></div>
+    <div class="flow-node">
+      <div class="fn-icon"><span data-icon="zap"></span></div>
+      <div class="fn-title">WATT Meter</div>
+      <div class="fn-desc">Measures kWh, signs data cryptographically, transmits every 15 mins.</div>
+    </div>
+    <div class="flow-arr"><span data-icon="arrow-right"></span></div>
+    <div class="flow-node">
+      <div class="fn-icon"><span data-icon="shield-check"></span></div>
+      <div class="fn-title">Verification</div>
+      <div class="fn-desc">Smart contracts verify signature + oracle cross-check. Fraud rejected.</div>
+    </div>
+    <div class="flow-arr"><span data-icon="arrow-right"></span></div>
+    <div class="flow-node">
+      <div class="fn-icon"><span data-icon="blocks"></span></div>
+      <div class="fn-title">Base Network</div>
+      <div class="fn-desc">Immutable record written on blockchain. Permanent, public, auditable.</div>
+    </div>
+    <div class="flow-arr"><span data-icon="arrow-right"></span></div>
+    <div class="flow-node">
+      <div class="fn-icon"><span data-icon="wallet"></span></div>
+      <div class="fn-title">Your Wallet</div>
+      <div class="fn-desc">$WATT tokens arrive automatically. Trade, stake, or spend globally.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section">
+
+  <div class="step-block">
+    <div class="step-num-big reveal">01</div>
+    <div class="step-content reveal">
+      <div class="step-title">THE WATT SMART METER</div>
+      <p class="step-desc">The hardware is the foundation. A compact, weatherproof IoT device that clamps onto your existing solar setup — no rewiring, no electrician needed. It measures energy with certified Class 1 accuracy and cryptographically signs every reading so it cannot be forged.</p>
+      <div class="step-details">
+        <div class="step-detail">IP65 weatherproof — works outdoors in any climate, any continent</div>
+        <div class="step-detail">Self-powered from the solar circuit it monitors — zero running costs</div>
+        <div class="step-detail">WiFi + GSM connectivity — works in cities and remote off-grid areas</div>
+        <div class="step-detail">Unique cryptographic identity burned at manufacture — unfakeable</div>
+        <div class="step-detail">Local MicroSD backup — no data lost during connectivity gaps</div>
+      </div>
+    </div>
+    <div class="step-visual reveal">
+      <div class="spec-row"><span class="spec-key">Accuracy</span><span class="spec-val">Class 1 (±1%)</span></div>
+      <div class="spec-row"><span class="spec-key">Standard</span><span class="spec-val">IEC 62053 + ANSI C12</span></div>
+      <div class="spec-row"><span class="spec-key">Connectivity</span><span class="spec-val">WiFi 2.4GHz + 4G GSM</span></div>
+      <div class="spec-row"><span class="spec-key">Data Cadence</span><span class="spec-val">Every 15 minutes</span></div>
+      <div class="spec-row"><span class="spec-key">Install Time</span><span class="spec-val">Under 30 minutes</span></div>
+      <div class="spec-row"><span class="spec-key">Casing</span><span class="spec-val">IP65 Weatherproof ABS</span></div>
+      <!-- <div class="spec-row"><span class="spec-key">Prototype Cost</span><span class="spec-val">~$56 USD</span></div> -->
+      <div class="spec-row"><span class="spec-key">Retail Price</span><span class="spec-val">$50 USD</span></div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num-big reveal">02</div>
+    <div class="step-content reveal">
+      <div class="step-title">CRYPTOGRAPHIC VERIFICATION</div>
+      <p class="step-desc">Every WATT Meter has a unique keypair generated at manufacture. Energy readings are signed using ECDSA — the same cryptography that secures Bitcoin. The protocol verifies each signature before accepting data. No signature, no reward. Fake signature, rejected automatically.</p>
+      <div class="step-details">
+        <div class="step-detail">ECDSA signatures — mathematically impossible to forge without the physical device</div>
+        <div class="step-detail">Chainlink oracle cross-validates against real-world solar irradiance data</div>
+        <div class="step-detail">Hardware tamper seal — triggers an on-chain flag if the device is opened</div>
+        <div class="step-detail">Decentralized auditors conduct random spot-checks, paid in $WATT</div>
+        <div class="step-detail">Three independent fraud prevention layers must all be defeated simultaneously</div>
+      </div>
+    </div>
+    <div class="step-visual reveal">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--gray4);margin-bottom:16px;letter-spacing:2px;">VERIFICATION FLOW</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:var(--gray3);padding:12px 16px;font-family:var(--font-mono);font-size:11px;color:var(--green);"><span data-icon="check"></span><span style="margin-left:8px;">Device signature valid</span></div>
+        <div style="background:var(--gray3);padding:12px 16px;font-family:var(--font-mono);font-size:11px;color:var(--green);"><span data-icon="check"></span><span style="margin-left:8px;">Device registered in registry</span></div>
+        <div style="background:var(--gray3);padding:12px 16px;font-family:var(--font-mono);font-size:11px;color:var(--green);"><span data-icon="check"></span><span style="margin-left:8px;">Tamper seal intact</span></div>
+        <div style="background:var(--gray3);padding:12px 16px;font-family:var(--font-mono);font-size:11px;color:var(--green);"><span data-icon="check"></span><span style="margin-left:8px;">Oracle data within bounds</span></div>
+        <div style="background:rgba(0,200,83,0.1);border:1px solid var(--green);padding:12px 16px;font-family:var(--font-mono);font-size:11px;color:var(--green);"><span data-icon="wallet"></span><span style="margin-left:8px;">Reward released to wallet</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num-big reveal">03</div>
+    <div class="step-content reveal">
+      <div class="step-title">BASE BLOCKCHAIN & SMART CONTRACTS</div>
+      <p class="step-desc">All verified data is permanently recorded on Base — Coinbase's Ethereum Layer 2 network. Smart contracts handle everything: token minting, reward distribution, carbon credit generation, and governance. No humans in the loop. No delays. No corruption possible.</p>
+      <div class="step-details">
+        <div class="step-detail">Base network — sub-cent transaction fees enable micro-reward viability</div>
+        <div class="step-detail">ERC-20 standard — $WATT works with every wallet and exchange automatically</div>
+        <div class="step-detail">6 interconnected smart contracts — each audited independently</div>
+        <div class="step-detail">Open source — all code publicly verifiable on GitHub</div>
+        <div class="step-detail">Emergency pause mechanism — security protection during any critical event</div>
+      </div>
+    </div>
+    <div class="step-visual reveal">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--gray4);margin-bottom:16px;letter-spacing:2px;">SMART CONTRACTS</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--gray3);font-family:var(--font-mono);font-size:10px;">
+          <span style="color:var(--yellow);">WATTToken.sol</span><span style="color:var(--gray5);">ERC-20 Token</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--gray3);font-family:var(--font-mono);font-size:10px;">
+          <span style="color:var(--yellow);">DeviceRegistry.sol</span><span style="color:var(--gray5);">Device Auth</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--gray3);font-family:var(--font-mono);font-size:10px;">
+          <span style="color:var(--yellow);">EnergyOracle.sol</span><span style="color:var(--gray5);">Data Verify</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--gray3);font-family:var(--font-mono);font-size:10px;">
+          <span style="color:var(--yellow);">RewardDistributor.sol</span><span style="color:var(--gray5);">Auto Rewards</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--gray3);font-family:var(--font-mono);font-size:10px;">
+          <span style="color:var(--yellow);">CarbonRegistry.sol</span><span style="color:var(--gray5);">Carbon Credits</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--gray3);font-family:var(--font-mono);font-size:10px;">
+          <span style="color:var(--yellow);">StakingVault.sol</span><span style="color:var(--gray5);">Stake & Earn</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- SECURITY -->
+<section class="security-section">
+  <div class="tag reveal">Security First</div>
+  <h2 class="section-title reveal">THREE LAYERS<br>OF <span class="hl">FRAUD</span><br><span class="ol">PREVENTION</span></h2>
+  <div class="security-grid">
+    <div class="sec-card reveal">
+      <div class="sec-icon"><span data-icon="shield-check"></span></div>
+      <div class="sec-title">Hardware Security</div>
+      <div class="sec-desc">Every meter has a unique cryptographic keypair burned at manufacture. Physical tamper seals trigger immediate on-chain flags. You cannot submit fake data without the physical device — period.</div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon"><span data-icon="globe"></span></div>
+      <div class="sec-title">Oracle Validation</div>
+      <div class="sec-desc">Chainlink oracle nodes cross-reference all energy claims against real-world solar irradiance data for that location. A meter claiming 100 kWh on a cloudy day is automatically flagged and rejected.</div>
+    </div>
+    <div class="sec-card reveal">
+      <div class="sec-icon"><span data-icon="users"></span></div>
+      <div class="sec-title">Physical Audits</div>
+      <div class="sec-desc">A decentralized network of local verifiers — paid in $WATT — conducts random physical spot checks on registered devices. The community itself is the final security layer.</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding:80px;text-align:center;">
+  <div class="tag reveal" style="justify-content:center;">Ready to Start?</div>
+  <h2 class="section-title reveal" style="font-size:clamp(36px,5vw,64px);">JOIN THE<br><span class="hl">WAITLIST</span></h2>
+  <p style="font-size:16px;color:var(--gray5);max-width:400px;margin:24px auto 40px;line-height:1.8;" class="reveal">Be among the first to install a WATT Meter and start earning $WATT from your solar energy.</p>
+  <a href="index.html#waitlist" class="btn btn-primary reveal"><span data-icon="zap"></span><span style="margin-left:10px;">Join the Waitlist</span></a>
+</section>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+</body>
+</html>

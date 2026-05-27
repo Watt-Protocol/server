@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="$WATT Protocol — Earn crypto tokens for generating renewable energy. Born in Africa, built for the world.">
+<title>$WATT Protocol — Energy to Earn</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="$WATT Protocol — Energy to Earn">
+<meta property="og:description" content="Generate clean energy → earn $WATT tokens. A decentralized protocol rewarding individuals worldwide for renewable energy. Born in Africa. Built for the World.">
+<meta property="og:url"         content="/">
+<meta property="og:image"       content="/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height"content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="$WATT Protocol — Energy to Earn">
+<meta name="twitter:description" content="Generate clean energy → earn $WATT tokens. Born in Africa. Built for the World.">
+<meta name="twitter:image"       content="/og-image.png">
+<!-- Canonical -->
+<link rel="canonical" href="/">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="$WATT">
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  padding-top: 72px;
+  overflow: hidden;
+}
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px 80px 80px;
+  position: relative;
+  z-index: 2;
+}
+.hero-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 80% 40%, rgba(245,230,66,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(232,96,10,0.04) 0%, transparent 60%);
+}
+.hero-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(72px, 9vw, 140px);
+  line-height: 0.88;
+  letter-spacing: 1px;
+  margin-bottom: 36px;
+  animation: fadeUp 1s ease 0.3s both;
+}
+.hero-h1 .line2 { color: var(--yellow); }
+.hero-h1 .line3 { -webkit-text-stroke: 1.5px rgba(242,239,232,0.4); color: transparent; }
+.hero-sub {
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--gray5);
+  max-width: 480px;
+  margin-bottom: 48px;
+  font-weight: 400;
+  animation: fadeUp 1s ease 0.5s both;
+}
+.hero-sub strong { color: var(--white); font-weight: 600; }
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  animation: fadeUp 1s ease 0.7s both;
+  margin-bottom: 64px;
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  border-top: 1px solid var(--border);
+  padding-top: 40px;
+  animation: fadeUp 1s ease 0.9s both;
+}
+.hero-stat { padding-right: 24px; border-right: 1px solid var(--border); }
+.hero-stat:last-child { border-right: none; padding-right: 0; padding-left: 24px; }
+.hero-stat:nth-child(2) { padding: 0 24px; }
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 40px;
+  color: var(--yellow);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gray4);
+  margin-top: 4px;
+}
+
+/* Energy globe visual */
+.energy-visual {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray1);
+}
+.energy-orb {
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(245,230,66,0.9), rgba(232,96,10,0.7), rgba(8,10,14,0.9));
+  box-shadow:
+    0 0 80px rgba(245,230,66,0.25),
+    0 0 160px rgba(232,96,10,0.1),
+    inset 0 0 60px rgba(0,0,0,0.5);
+  animation: orb-float 6s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+.energy-orb-inner {
+  position: absolute;
+  inset: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(245,230,66,0.3), transparent 60%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.orb-symbol {
+  font-family: var(--font-display);
+  font-size: 64px;
+  color: var(--black);
+  line-height: 1;
+}
+.orb-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(8,10,14,0.7);
+}
+.energy-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(245,230,66,0.15);
+  animation: ring-pulse 4s ease-in-out infinite;
+}
+.energy-ring:nth-child(1){ width:360px;height:360px;animation-delay:0s; }
+.energy-ring:nth-child(2){ width:460px;height:460px;animation-delay:0.8s; }
+.energy-ring:nth-child(3){ width:560px;height:560px;animation-delay:1.6s; }
+.energy-data-tag {
+  position: absolute;
+  background: rgba(8,10,14,0.9);
+  border: 1px solid var(--border);
+  padding: 12px 18px;
+  backdrop-filter: blur(8px);
+}
+.edt-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-bottom: 4px; }
+.edt-val { font-family: var(--font-display); font-size: 22px; color: var(--yellow); }
+.edt1 { top: 20%; left: 5%; }
+.edt2 { bottom: 25%; right: 5%; }
+.edt3 { top: 60%; left: 5%; }
+
+/* Ticker */
+.ticker {
+  background: var(--yellow);
+  padding: 12px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-track {
+  display: inline-flex;
+  animation: ticker-scroll 28s linear infinite;
+  width: max-content;
+}
+.ticker-item {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: var(--black);
+  padding: 0 36px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.ticker-sep { color: var(--orange); font-size: 12px; }
+
+/* How it works preview */
+.hiw-section { padding: 120px 80px; position: relative; }
+.hiw-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-top: 64px; }
+.hiw-card {
+  background: var(--gray2);
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+.hiw-card:hover { transform: translateY(-6px); }
+.hiw-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--yellow);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.hiw-card:hover::before { transform: scaleX(1); }
+.hiw-num {
+  font-family: var(--font-display);
+  font-size: 80px;
+  color: rgba(245,230,66,0.06);
+  line-height: 1;
+  position: absolute;
+  top: 16px; right: 20px;
+}
+.hiw-icon { font-size: 32px; margin-bottom: 20px; }
+.hiw-title { font-family: var(--font-display); font-size: 24px; letter-spacing: 1px; color: var(--yellow); margin-bottom: 12px; }
+.hiw-desc { font-size: 14px; line-height: 1.75; color: var(--gray5); }
+.hiw-link { margin-top: 80px; text-align: center; }
+
+/* SDG preview */
+.sdg-preview { padding: 120px 80px; background: var(--gray1); position: relative; overflow: hidden; }
+.sdg-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.sdg-goals { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 40px; }
+.sdg-goal {
+  background: var(--gray2);
+  padding: 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  border-left: 3px solid transparent;
+  transition: border-color 0.3s;
+}
+.sdg-goal:hover { border-left-color: var(--yellow); }
+.sdg-icon { font-size: 28px; flex-shrink: 0; }
+.sdg-num { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; color: var(--orange); margin-bottom: 4px; }
+.sdg-name { font-size: 13px; font-weight: 600; color: var(--white); line-height: 1.3; }
+.sdg-visual { position: relative; }
+.sdg-token-display {
+  background: var(--gray2);
+  border: 1px solid var(--border);
+  padding: 40px;
+  text-align: center;
+}
+.sdg-token-pct {
+  font-family: var(--font-display);
+  font-size: 96px;
+  color: var(--yellow);
+  line-height: 1;
+}
+.sdg-token-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gray5);
+  margin-top: 8px;
+}
+.sdg-token-amount {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--orange);
+  margin-top: 12px;
+}
+.sdg-bars { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+.sdg-bar-row { display: flex; align-items: center; gap: 12px; }
+.sdg-bar-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 1px; color: var(--gray5); min-width: 80px; text-align: right; }
+.sdg-bar-track { flex: 1; height: 6px; background: var(--gray3); }
+.sdg-bar-fill { height: 100%; background: var(--yellow); transition: width 1.5s ease; }
+.sdg-bar-fill.orange { background: var(--orange); }
+.sdg-bar-fill.green { background: var(--green); }
+
+/* Token preview */
+.token-preview { padding: 120px 80px; }
+.token-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-top: 64px; }
+.token-card { background: var(--gray2); padding: 36px 28px; text-align: center; }
+.tc-num { font-family: var(--font-display); font-size: 52px; color: var(--yellow); line-height: 1; }
+.tc-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-top: 8px; }
+
+/* Waitlist */
+.waitlist-section {
+  padding: 120px 80px;
+  background: var(--gray1);
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+.waitlist-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(245,230,66,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.waitlist-title { font-family: var(--font-display); font-size: clamp(48px,7vw,100px); line-height: 0.92; margin-bottom: 20px; position: relative; }
+.waitlist-sub { font-size: 16px; color: var(--gray5); max-width: 480px; margin: 0 auto 48px; line-height: 1.8; position: relative; }
+.waitlist-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+}
+.waitlist-form input {
+  padding: 18px 24px;
+  background: var(--gray2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.waitlist-form input:focus { border-color: var(--yellow); }
+.waitlist-form input::placeholder { color: var(--gray4); }
+.waitlist-form button {
+  background: var(--yellow);
+  color: var(--black);
+  border: none;
+  padding: 18px 32px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: background 0.3s;
+  white-space: nowrap;
+  width: 100%;
+}
+.waitlist-form button:hover { background: var(--orange); color: var(--white); }
+.waitlist-success { display: none; margin-top: 16px; font-family: var(--font-mono); font-size: 12px; letter-spacing: 2px; color: var(--green); }
+.waitlist-note { margin-top: 16px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); position: relative; }
+/* Founding counter */
+.founding-counter { max-width: 480px; margin: 0 auto 40px; }
+.founding-counter-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.founding-counter-label { font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--yellow); }
+.founding-counter-nums { font-family: var(--font-mono); font-size: 11px; color: var(--white); font-weight: 600; }
+.founding-bar-track { width: 100%; height: 6px; background: var(--gray3); position: relative; overflow: hidden; }
+.founding-bar-fill { height: 100%; background: linear-gradient(90deg, var(--yellow), var(--orange)); transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+.founding-counter-sub { font-family: var(--font-mono); font-size: 10px; color: var(--gray4); margin-top: 8px; letter-spacing: 0.05em; }
+
+/* Referral code row */
+.waitlist-ref-row { max-width: 520px; margin: 12px auto 0; text-align: left; position: relative; }
+.waitlist-ref-toggle {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gray4);
+  cursor: pointer; transition: color 0.2s; display: inline-block;
+}
+.waitlist-ref-toggle:hover { color: var(--yellow); }
+.waitlist-ref-toggle span { color: var(--yellow); }
+.waitlist-ref-input {
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 10px; border: 1px solid var(--border);
+  background: var(--gray2); padding: 0 16px;
+}
+.waitlist-ref-input input {
+  flex: 1; background: transparent; border: none;
+  padding: 13px 0; color: var(--yellow);
+  outline: none; text-transform: uppercase;
+}
+.waitlist-ref-input input::placeholder { color: var(--gray4); text-transform: none; font-size: 12px; letter-spacing: 0.05em; }
+#refCodeStatus {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.1em; white-space: nowrap;
+}
+
+/* Global map strip */
+.map-strip { padding: 80px; background: var(--gray2); }
+.map-strip-title { font-family: var(--font-mono); font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gray4); text-align: center; margin-bottom: 40px; }
+.map-regions { display: flex; justify-content: center; gap: 0; flex-wrap: wrap; }
+.map-region {
+  padding: 20px 28px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+  transition: background 0.3s;
+}
+.map-region:last-child { border-right: none; }
+.map-region:hover { background: rgba(245,230,66,0.04); }
+.mr-flag { font-size: 24px; margin-bottom: 8px; line-height: 1; }
+.mr-flag .watt-icon-inline { font-size: 0.95em; }
+.mr-flag .mr-region-icon { font-size: 0.9em; }
+.mr-name { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray5); }
+.mr-status { font-size: 10px; color: var(--orange); margin-top: 4px; }
+.mr-status.live { color: var(--green); }
+
+@keyframes discGlow { 0%,100%{filter:drop-shadow(0 0 18px rgba(245,197,24,0.35));} 50%{filter:drop-shadow(0 0 52px rgba(245,197,24,0.7)) drop-shadow(0 0 90px rgba(245,197,24,0.2));} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);} }
+@keyframes orb-float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);} }
+@keyframes ring-pulse { 0%,100%{opacity:0.3;transform:scale(1);}50%{opacity:0.05;transform:scale(1.04);} }
+@keyframes ticker-scroll { from{transform:translateX(0);}to{transform:translateX(-50%);} }
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;min-height:auto;}
+  .hero-left{padding:100px 24px 60px;}
+  .hero-right{min-height:50vw;}
+  .energy-ring{display:none;}
+  .hiw-section,.sdg-preview,.token-preview,.waitlist-section,.map-strip{padding-left:24px;padding-right:24px;}
+  .hiw-grid{grid-template-columns:1fr 1fr;}
+  .sdg-inner{grid-template-columns:1fr;}
+  .token-grid{grid-template-columns:1fr 1fr;}
+  .map-strip{padding:48px 24px;}
+  .hero-stats{grid-template-columns:1fr;}
+  .hero-stat{border-right:none;border-bottom:1px solid var(--border);padding:16px 0;}
+  .hero-stat:last-child{border-bottom:none;}
+}
+@media(max-width:600px){
+  .hiw-grid{grid-template-columns:1fr;}
+  .sdg-goals{grid-template-columns:1fr;}
+  .token-grid{grid-template-columns:1fr;}
+  .waitlist-form{max-width:none;}
+}
+</style>
+</head>
+<body>
+<div class="grid-texture" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-left">
+    <div class="tag"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--xs"> $WATT Protocol</div>
+    <h1 class="hero-h1">
+      ENERGY<br>
+      <span class="line2">TO</span><br>
+      <span class="line3">EARN.</span>
+    </h1>
+    <p class="hero-sub">
+      Generate <strong>solar energy.</strong> Earn <strong>$WATT tokens</strong> automatically. Every kilowatt you produce is verified on-chain and rewarded — anywhere on Earth, without intermediaries.
+    </p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn btn-primary"><span data-icon="zap"></span><span style="margin-left:10px;">Join the Waitlist</span></a>
+      <a href="how-it-works.html" class="btn btn-outline">How It Works <span data-icon="arrow-right" style="margin-left:10px;"></span></a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">1B</div>
+        <div class="hero-stat-label">Total $WATT Supply</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">1KWh</div>
+        <div class="hero-stat-label">= 1 $WATT Earned</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">7+</div>
+        <div class="hero-stat-label">Global Regions</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="energy-visual">
+      <div class="energy-ring"></div>
+      <div class="energy-ring"></div>
+      <div class="energy-ring"></div>
+      <div style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--xl" style="animation:discGlow 3.5s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(245,197,24,0.4));"></div>
+      <div class="energy-data-tag edt1">
+        <div class="edt-label">Live kWh</div>
+        <div class="edt-val" id="liveKwh">14.7</div>
+      </div>
+      <div class="energy-data-tag edt2">
+        <div class="edt-label">Earned Today</div>
+        <div class="edt-val" id="earnedToday">14.7 $W</div>
+      </div>
+      <div class="energy-data-tag edt3">
+        <div class="edt-label">Live Watts</div>
+        <div class="edt-val" id="liveWatts">247W</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">GENERATE ENERGY <span class="ticker-sep">◆</span> EARN $WATT <span class="ticker-sep">◆</span> CLEAN PLANET <span class="ticker-sep">◆</span> REAL REWARDS <span class="ticker-sep">◆</span> BORN IN AFRICA <span class="ticker-sep">◆</span> BUILT FOR THE WORLD <span class="ticker-sep">◆</span> SOLAR TO CRYPTO <span class="ticker-sep">◆</span> 0% VC PRESALE <span class="ticker-sep">◆</span> 60% EARNED BY USERS <span class="ticker-sep">◆</span></div>
+    <div class="ticker-item">GENERATE ENERGY <span class="ticker-sep">◆</span> EARN $WATT <span class="ticker-sep">◆</span> CLEAN PLANET <span class="ticker-sep">◆</span> REAL REWARDS <span class="ticker-sep">◆</span> BORN IN AFRICA <span class="ticker-sep">◆</span> BUILT FOR THE WORLD <span class="ticker-sep">◆</span> SOLAR TO CRYPTO <span class="ticker-sep">◆</span> 0% VC PRESALE <span class="ticker-sep">◆</span> 60% EARNED BY USERS <span class="ticker-sep">◆</span></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS PREVIEW -->
+<section class="hiw-section cv-auto">
+  <div class="tag reveal">The Process</div>
+  <h2 class="section-title reveal">HOW<br><span class="hl">$WATT</span><br><span class="ol">WORKS</span></h2>
+  <div class="hiw-grid">
+    <div class="hiw-card reveal">
+      <div class="hiw-num">01</div>
+      <div class="hiw-icon"><span data-icon="plug"></span></div>
+      <div class="hiw-title">Install Meter</div>
+      <div class="hiw-desc">Attach the WATT Smart Meter to any solar panel or inverter. No rewiring. Under 30 minutes. Works in any country.</div>
+    </div>
+    <div class="hiw-card reveal">
+      <div class="hiw-num">02</div>
+      <div class="hiw-icon"><span data-icon="radio"></span></div>
+      <div class="hiw-title">Measure Energy</div>
+      <div class="hiw-desc">The meter measures your energy generation with ±1% accuracy every 15 minutes and cryptographically signs the data.</div>
+    </div>
+    <div class="hiw-card reveal">
+      <div class="hiw-num">03</div>
+      <div class="hiw-icon"><span data-icon="blocks"></span></div>
+      <div class="hiw-title">Verify On-Chain</div>
+      <div class="hiw-desc">Smart contracts on Base network verify the data signature. Tamper-proof. No intermediaries. Fully transparent.</div>
+    </div>
+    <div class="hiw-card reveal">
+      <div class="hiw-num">04</div>
+      <div class="hiw-icon"><span data-icon="wallet"></span></div>
+      <div class="hiw-title">Earn $WATT</div>
+      <div class="hiw-desc">$WATT tokens are automatically sent to your wallet. Trade, stake, spend, or convert to local currency instantly.</div>
+    </div>
+  </div>
+  <div class="hiw-link reveal">
+    <a href="how-it-works.html" class="btn btn-outline">Deep Dive — Full Technical Explainer <span data-icon="arrow-right" style="margin-left:10px;"></span></a>
+  </div>
+</section>
+
+<!-- GLOBAL REGIONS -->
+<div class="map-strip">
+  <div class="map-strip-title">Global Expansion — Targeting 7 Regions at Launch</div>
+  <div class="map-regions">
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="sun" data-icon-label="Africa" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">Africa</div>
+      <div class="mr-status live">● Origin</div>
+    </div>
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="leaf" data-icon-label="South Asia" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">South Asia</div>
+      <div class="mr-status">● Phase 2</div>
+    </div>
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="mountain" data-icon-label="Latin America" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">Latin America</div>
+      <div class="mr-status">● Phase 2</div>
+    </div>
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="flame" data-icon-label="Middle East" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">Middle East</div>
+      <div class="mr-status">● Phase 3</div>
+    </div>
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="waves" data-icon-label="Southeast Asia" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">Southeast Asia</div>
+      <div class="mr-status">● Phase 3</div>
+    </div>
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="landmark" data-icon-label="Europe" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">Europe</div>
+      <div class="mr-status">● Phase 3</div>
+    </div>
+    <div class="map-region reveal">
+      <div class="mr-flag"><span data-icon="compass" data-icon-label="North America" data-icon-class="mr-region-icon"></span></div>
+      <div class="mr-name">North America</div>
+      <div class="mr-status">● Phase 4</div>
+    </div>
+  </div>
+</div>
+
+<!-- SDG COMMUNITY -->
+<section class="sdg-preview cv-auto">
+  <div class="grid-texture"></div>
+  <div class="sdg-inner">
+    <div>
+      <div class="tag reveal">Community & SDGs</div>
+      <h2 class="section-title reveal">MORE THAN<br><span class="hl">A TOKEN.</span><br><span class="ol">A MISSION.</span></h2>
+      <p style="font-size:16px;line-height:1.85;color:var(--gray5);margin:28px 0;max-width:480px;" class="reveal">5% of all $WATT tokens — 50 million tokens — are permanently reserved for communities with zero access to clean water, electricity, and schools. Governed by the community. Recorded on-chain. Zero corruption possible.</p>
+      <div class="sdg-goals">
+        <div class="sdg-goal reveal">
+          <div class="sdg-icon"><span data-icon="zap" data-icon-label="SDG 7 Affordable Clean Energy"></span></div>
+          <div><div class="sdg-num">SDG 7</div><div class="sdg-name">Affordable Clean Energy</div></div>
+        </div>
+        <div class="sdg-goal reveal">
+          <div class="sdg-icon"><span data-icon="graduation-cap" data-icon-label="SDG 4 Quality Education"></span></div>
+          <div><div class="sdg-num">SDG 4</div><div class="sdg-name">Quality Education</div></div>
+        </div>
+        <div class="sdg-goal reveal">
+          <div class="sdg-icon"><span data-icon="waves" data-icon-label="SDG 6 Clean Water Access"></span></div>
+          <div><div class="sdg-num">SDG 6</div><div class="sdg-name">Clean Water Access</div></div>
+        </div>
+        <div class="sdg-goal reveal">
+          <div class="sdg-icon"><span data-icon="leaf" data-icon-label="SDG 13 Climate Action"></span></div>
+          <div><div class="sdg-num">SDG 13</div><div class="sdg-name">Climate Action</div></div>
+        </div>
+      </div>
+      <div style="margin-top:32px;" class="reveal">
+        <a href="community.html" class="btn btn-primary">See Our Community Mission <span data-icon="arrow-right" style="margin-left:10px;"></span></a>
+      </div>
+    </div>
+    <div class="sdg-visual reveal">
+      <div class="sdg-token-display">
+        <div class="sdg-token-pct">5%</div>
+        <div class="sdg-token-label">Of Total $WATT Supply</div>
+        <div class="sdg-token-amount">50,000,000 $WATT</div>
+        <div class="sdg-token-label" style="margin-top:8px;">Reserved for Communities in Need</div>
+        <div class="sdg-bars" style="margin-top:32px;">
+          <div class="sdg-bar-row">
+            <div class="sdg-bar-label">Clean Energy</div>
+            <div class="sdg-bar-track"><div class="sdg-bar-fill" style="width:40%"></div></div>
+          </div>
+          <div class="sdg-bar-row">
+            <div class="sdg-bar-label">Schools</div>
+            <div class="sdg-bar-track"><div class="sdg-bar-fill orange" style="width:30%"></div></div>
+          </div>
+          <div class="sdg-bar-row">
+            <div class="sdg-bar-label">Clean Water</div>
+            <div class="sdg-bar-track"><div class="sdg-bar-fill green" style="width:30%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKEN PREVIEW -->
+<section class="token-preview cv-auto">
+  <div style="display:flex;align-items:center;gap:24px;" class="reveal"><div class="tag" style="margin-bottom:0">Tokenomics</div><span data-icon="zap" data-icon-class="tokenomics-icon"></span></div>
+  <h2 class="section-title reveal" style="margin-top:24px;">THE<br><span class="hl">$WATT</span><br>TOKEN</h2>
+  <div class="token-grid" style="margin-top:64px;">
+    <div class="token-card reveal">
+      <div class="tc-num">1B</div>
+      <div class="tc-label">Fixed Total Supply</div>
+    </div>
+    <div class="token-card reveal">
+      <div class="tc-num">60%</div>
+      <div class="tc-label">Earned by Users</div>
+    </div>
+    <div class="token-card reveal">
+      <div class="tc-num">0%</div>
+      <div class="tc-label">VC Presale</div>
+    </div>
+    <div class="token-card reveal">
+      <div class="tc-num">5%</div>
+      <div class="tc-label">Community Fund</div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:48px;" class="reveal">
+    <a href="token.html" class="btn btn-outline">Full Tokenomics Breakdown <span data-icon="arrow-right" style="margin-left:10px;"></span></a>
+  </div>
+</section>
+
+<!-- EMAIL VERIFICATION MODAL -->
+<div id="verifyModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:#0f0f0f;border:1px solid var(--border);max-width:420px;width:calc(100% - 40px);padding:40px 36px;position:relative;">
+    <!-- accent bar -->
+    <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:var(--yellow);"></div>
+    <!-- close -->
+    <button onclick="document.getElementById('verifyModal').style.display='none'"
+      style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gray4);font-size:18px;line-height:1;cursor:pointer;"><span data-icon="x"></span></button>
+
+    <p style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--yellow);margin:0 0 12px;">Almost there</p>
+    <h3 style="font-size:22px;font-weight:700;margin:0 0 10px;color:var(--white);display:flex;align-items:center;gap:10px;">Check your inbox <span data-icon="mail"></span></h3>
+    <p style="font-size:13px;color:var(--gray5);line-height:1.7;margin:0 0 8px;">We sent a confirmation link to <strong id="verifyEmailDisplay" style="color:var(--white);"></strong>.</p>
+    <p style="font-size:13px;color:var(--gray5);line-height:1.7;margin:0 0 28px;">Click the link to secure your spot and claim your early-adopter $WATT bonus.</p>
+
+    <div style="background:rgba(245,230,66,0.06);border:1px solid rgba(245,230,66,0.15);padding:14px 16px;margin-bottom:28px;">
+      <p style="font-family:var(--font-mono);font-size:11px;color:var(--gray4);margin:0;line-height:1.6;">Didn't get it? Check your spam folder, or close this and try again.</p>
+    </div>
+
+    <button onclick="document.getElementById('verifyModal').style.display='none'"
+      style="width:100%;background:var(--yellow);color:var(--black);border:none;padding:15px 24px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;">
+      Got it
+    </button>
+  </div>
+</div>
+
+<!-- DUPLICATE EMAIL MODAL -->
+<div id="existsModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:#0f0f0f;border:1px solid var(--border);max-width:420px;width:calc(100% - 40px);padding:40px 36px;position:relative;">
+    <!-- accent bar -->
+    <div style="position:absolute;top:0;left:0;width:4px;height:100%;background:var(--yellow);"></div>
+    <!-- close -->
+    <button onclick="document.getElementById('existsModal').style.display='none'"
+      style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gray4);font-size:18px;line-height:1;cursor:pointer;"><span data-icon="x"></span></button>
+
+    <p style="font-family:var(--font-mono);font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--yellow);margin:0 0 12px;">Account Found</p>
+    <h3 style="font-size:22px;font-weight:700;margin:0 0 10px;color:var(--white);">You're already on<br>the waitlist</h3>
+    <p style="font-size:13px;color:var(--gray5);line-height:1.7;margin:0 0 28px;">An account for <strong id="existsEmailDisplay" style="color:var(--white);"></strong> already exists. Head to your dashboard to see your position, referrals, and earned $WATT.</p>
+
+    <button id="existsGoBtn" onclick="goToDashboard()"
+      style="width:100%;background:var(--yellow);color:var(--black);border:none;padding:15px 24px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;">
+      View My Dashboard →
+    </button>
+    <button onclick="document.getElementById('existsModal').style.display='none'"
+      style="width:100%;background:none;border:1px solid var(--border);color:var(--gray4);padding:12px 24px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:10px;transition:border-color 0.2s,color 0.2s;">
+      Close
+    </button>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT STRIP (shown only when admin sets an announcement) -->
+<div id="announcement-strip" style="display:none;align-items:center;justify-content:center;gap:16px;background:rgba(245,230,66,0.07);border-top:1px solid rgba(245,230,66,0.18);border-bottom:1px solid rgba(245,230,66,0.18);padding:18px 40px;">
+  <span style="font-size:18px;"><span data-icon="sparkles"></span></span>
+  <p class="announcement-strip-text" style="font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:0.06em;color:var(--yellow);margin:0;text-align:center;"></p>
+  <span style="font-size:18px;"><span data-icon="sparkles"></span></span>
+</div>
+
+<!-- WAITLIST -->
+<section class="waitlist-section cv-auto-light" id="waitlist">
+  <div class="waitlist-glow"></div>
+  <div class="tag reveal" style="justify-content:center;">Early Access</div>
+  <h2 class="waitlist-title reveal">BE<br><span style="color:var(--yellow)">FIRST.</span></h2>
+  <p class="waitlist-sub reveal">Early adopters receive bonus $WATT at launch. Join thousands of people worldwide building the clean energy economy.</p>
+
+  <!-- Live founding slots counter -->
+  <div class="founding-counter reveal" id="foundingCounter" style="display:none">
+    <div class="founding-counter-top">
+      <span class="founding-counter-label"><span data-icon="crown"></span><span style="margin-left:8px;">Founding Member Slots</span></span>
+      <span class="founding-counter-nums"><span id="slotsFilled">—</span> / <span id="slotsTotal">1,000</span> claimed</span>
+    </div>
+    <div class="founding-bar-track">
+      <div class="founding-bar-fill" id="slotsBar" style="width:0%"></div>
+    </div>
+    <p class="founding-counter-sub" id="slotsLeft">Founding members earn 1.5× $WATT — forever.</p>
+  </div>
+
+  <form class="waitlist-form reveal" id="waitlistForm">
+    <input type="email" id="waitlistEmail" placeholder="your@email.com" required>
+    <input type="password" id="waitlistPassword" placeholder="Choose a password" minlength="8" required>
+    <input type="text" id="waitlistWebsite" name="website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+    <button type="submit" id="waitlistBtn">Join Now</button>
+  </form>
+  <!-- Referral code row -->
+  <div class="waitlist-ref-row reveal" id="refRow">
+    <div class="waitlist-ref-toggle" id="refToggle" onclick="toggleRefInput()">
+      Have a referral code? <span>Enter it here →</span>
+    </div>
+    <div class="waitlist-ref-input" id="refInputWrap" style="display:none;">
+      <input type="text" id="refCodeInput" placeholder="e.g. X7K2PQ4M"
+        maxlength="8" autocomplete="off"
+        oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+        style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.15em;">
+      <span id="refCodeStatus"></span>
+    </div>
+  </div>
+  <div class="waitlist-success reveal" id="waitlistSuccess"><span data-icon="check"></span><span style="margin-left:10px;">You're on the list. Check your inbox — whitepaper on the way.</span></div>
+  <p class="waitlist-note reveal" id="waitlistNote">No spam · Early access + bonus $WATT at launch</p>
+</section>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+<script>
+  // ── Live founding slots counter ────────────────────────────────────────
+  const _apiBase = window.WATT_API_BASE || document.documentElement.dataset.apiBase || '';
+  (async function loadSlots() {
+    try {
+      const r = await fetch(`${_apiBase}/api/stats`);
+      if (!r.ok) return;
+      const d = await r.json();
+      const total     = d.total     || 0;
+      const threshold = d.threshold || 1000;
+      const remaining = Math.max(0, threshold - total);
+      const pct       = Math.min(100, (total / threshold) * 100);
+
+      document.getElementById('slotsFilled').textContent = total.toLocaleString();
+      document.getElementById('slotsTotal').textContent  = threshold.toLocaleString();
+      document.getElementById('slotsBar').style.width    = pct + '%';
+      document.getElementById('slotsLeft').textContent   = remaining > 0
+        ? `${remaining.toLocaleString()} founding slots remaining — earn 1.5× $WATT forever.`
+        : 'All founding slots claimed. Standard membership available.';
+
+      const counter = document.getElementById('foundingCounter');
+      if (counter) counter.style.display = 'block';
+    } catch {}
+  })();
+
+  // Live data animation
+  function animateData() {
+    const kwh = (14 + Math.random()*2).toFixed(1);
+    const watts = Math.floor(220 + Math.random()*80);
+    document.getElementById('liveKwh').textContent = kwh;
+    document.getElementById('earnedToday').textContent = kwh + ' $W';
+    document.getElementById('liveWatts').textContent = watts + 'W';
+  }
+  setInterval(animateData, 3000);
+
+  // ── Referral code: read from URL param, cookie, or manual input ────────────
+  (function () {
+    const urlRef = new URLSearchParams(window.location.search).get('ref');
+    if (urlRef) {
+      document.cookie = `watt_ref=${urlRef};path=/;max-age=604800;SameSite=Lax`;
+      // Auto-populate and show the referral input
+      const inp = document.getElementById('refCodeInput');
+      const wrap = document.getElementById('refInputWrap');
+      const toggle = document.getElementById('refToggle');
+      inp.value = urlRef.toUpperCase();
+      wrap.style.display = 'flex';
+      toggle.innerHTML = 'Referral code applied: <span>' + urlRef.toUpperCase() + ' (applied)</span>';
+      setRefStatus('Applied', 'var(--green)');
+    }
+  })();
+
+  function getRefCookie() {
+    const match = document.cookie.split('; ').find(r => r.startsWith('watt_ref='));
+    return match ? decodeURIComponent(match.split('=')[1]) : null;
+  }
+
+  function getRefCode() {
+    // Priority: 1) manual input  2) URL ?ref= param  3) cookie
+    const manual = (document.getElementById('refCodeInput').value || '').trim().toUpperCase();
+    if (manual) return manual;
+
+    const urlRef = (new URLSearchParams(window.location.search).get('ref') || '').toUpperCase();
+    if (urlRef) return urlRef;
+
+    const cookie = (getRefCookie() || '').toUpperCase();
+    return cookie || null;
+  }
+
+  function setRefStatus(msg, color) {
+    const el = document.getElementById('refCodeStatus');
+    el.textContent = msg;
+    el.style.color  = color;
+  }
+
+  function toggleRefInput() {
+    const wrap   = document.getElementById('refInputWrap');
+    const toggle = document.getElementById('refToggle');
+    const isOpen = wrap.style.display !== 'none';
+    wrap.style.display = isOpen ? 'none' : 'flex';
+    if (!isOpen) {
+      document.getElementById('refCodeInput').focus();
+      toggle.innerHTML = 'Have a referral code? <span>Hide ↑</span>';
+    } else {
+      toggle.innerHTML = 'Have a referral code? <span>Enter it here →</span>';
+    }
+  }
+
+  // Live-validate referral code length as user types
+  document.getElementById('refCodeInput').addEventListener('input', function () {
+    const val = this.value.trim();
+    if (!val) { setRefStatus('', ''); return; }
+    if (val.length === 8) {
+      setRefStatus('Code ready', 'var(--green)');
+    } else {
+      setRefStatus(`${val.length}/8 chars`, 'var(--gray4)');
+    }
+  });
+
+  // Waitlist form
+  (function () {
+    const form    = document.getElementById('waitlistForm');
+    const input   = document.getElementById('waitlistEmail');
+    const passwordInput = document.getElementById('waitlistPassword');
+    const honeypot = document.getElementById('waitlistWebsite');
+    const btn     = document.getElementById('waitlistBtn');
+    const note    = document.getElementById('waitlistNote');
+    const success = document.getElementById('waitlistSuccess');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = input.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) return;
+      if (password.length < 8) {
+        note.textContent = 'Use at least 8 characters for your password.';
+        note.style.color = '#ff4444';
+        return;
+      }
+
+      const referredBy = getRefCode();
+      btn.textContent  = 'Joining...';
+      btn.disabled     = true;
+      input.disabled   = true;
+      passwordInput.disabled = true;
+      note.style.color = '';
+
+      try {
+        const res    = await fetch(`${_apiBase}/api/waitlist`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ email, password, referredBy, website: honeypot.value }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success && data.requiresVerification) {
+          // Email verification required — show modal
+          document.getElementById('verifyEmailDisplay').textContent = email;
+          document.getElementById('verifyModal').style.display = 'flex';
+          btn.textContent = 'Join Now';
+          btn.disabled    = false;
+          input.disabled  = false;
+          passwordInput.disabled = false;
+        } else if (res.ok && data.success) {
+          // Legacy / already-verified path
+          form.style.display    = 'none';
+          success.style.display = 'block';
+          note.textContent      = 'Redirecting to your dashboard...';
+          note.style.color      = 'var(--yellow)';
+          setTimeout(() => {
+            window.location.href = `dashboard.html?ref=${data.referralCode}`;
+          }, 1800);
+        } else if (data.alreadyExists) {
+          // Show modal — account already exists
+          document.getElementById('existsEmailDisplay').textContent = email;
+          document.getElementById('existsGoBtn').dataset.email = email;
+          document.getElementById('existsModal').style.display = 'flex';
+          btn.textContent = 'Join Now';
+          btn.disabled    = false;
+          input.disabled  = false;
+          passwordInput.disabled = false;
+        } else {
+          throw new Error(data.error || 'Something went wrong.');
+        }
+      } catch (err) {
+        note.textContent = err.message || 'Network error. Please try again.';
+        note.style.color = '#ff4444';
+        btn.textContent  = 'Try Again';
+        btn.disabled     = false;
+        input.disabled   = false;
+        passwordInput.disabled = false;
+      }
+    });
+
+    input.addEventListener('focus', () => { input.style.borderColor = ''; });
+  })();
+
+  // Close modals on backdrop click
+  ['existsModal', 'verifyModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+      if (e.target === this) this.style.display = 'none';
+    });
+  });
+
+  function goToDashboard() {
+    const email = document.getElementById('existsGoBtn').dataset.email;
+    window.location.href = `dashboard.html?email=${encodeURIComponent(email)}`;
+  }
+</script>
+</body>
+</html>

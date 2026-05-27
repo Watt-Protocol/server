@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="$WATT Protocol Community & SDG Impact — 5% of all tokens reserved for communities with no electricity, clean water, or schools.">
+<title>Community & SDG Impact — $WATT Protocol</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="Community & SDG Impact — $WATT Protocol">
+<meta property="og:description" content="5% of all $WATT tokens are reserved for communities with no electricity, clean water, or schools. Clean energy as a human right.">
+<meta property="og:url"         content="/community.html">
+<meta property="og:image"       content="/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height"content="630">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="Community & SDG Impact — $WATT Protocol">
+<meta name="twitter:description" content="5% of all $WATT tokens reserved for communities with no electricity. Clean energy as a human right.">
+<meta name="twitter:image"       content="/og-image.png">
+<!-- Canonical -->
+<link rel="canonical" href="/community.html">
+<link rel="icon" type="image/svg+xml" href="assets/img/logo/watt_logo.svg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page-hero { padding: 160px 80px 100px; position: relative; overflow: hidden; background: var(--gray1); }
+.hero-glow { position:absolute;top:-20%;left:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(0,200,83,0.06) 0%,transparent 70%);pointer-events:none; }
+
+/* Mission statement */
+.mission { padding: 100px 80px; }
+.mission-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.mission-quote {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  color: var(--white);
+  border-left: 4px solid var(--green);
+  padding-left: 36px;
+}
+.mission-quote .hl { color: var(--green); }
+.mission-right { display: flex; flex-direction: column; gap: 24px; }
+.mission-right p { font-size: 15px; line-height: 1.85; color: var(--gray5); }
+.mission-right strong { color: var(--white); }
+
+/* The fund */
+.fund-section { padding: 100px 80px; background: var(--gray1); }
+.fund-display {
+  background: var(--black);
+  border: 1px solid rgba(0,200,83,0.2);
+  padding: 60px;
+  text-align: center;
+  margin: 60px auto;
+  max-width: 700px;
+  position: relative;
+  overflow: hidden;
+}
+.fund-glow { position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0,200,83,0.05) 0%, transparent 70%);pointer-events:none; }
+.fund-pct { font-family: var(--font-display); font-size: 120px; color: var(--green); line-height: 1; position: relative; }
+.fund-of-supply { font-family: var(--font-mono); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gray4); margin-top: 8px; }
+.fund-amount { font-family: var(--font-display); font-size: 40px; color: var(--yellow); margin-top: 16px; }
+.fund-amount-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray4); margin-top: 8px; }
+.fund-allocation { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 40px; }
+.fund-alloc-item { background: var(--gray1); padding: 24px; text-align: center; }
+.fai-pct { font-family: var(--font-display); font-size: 36px; color: var(--green); }
+.fai-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-top: 6px; }
+
+/* SDG Cards */
+.sdg-section { padding: 100px 80px; }
+.sdg-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 2px; margin-top: 60px; }
+.sdg-card { background: var(--gray2); padding: 48px 40px; display: grid; grid-template-columns: 80px 1fr; gap: 32px; align-items: start; transition: background 0.3s; position: relative; overflow: hidden; }
+.sdg-card::before { content:''; position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform 0.4s; }
+.sdg-card:hover::before { transform:scaleX(1); }
+.sdg-card:hover { background: var(--gray3); }
+.sdg-badge { width: 80px; height: 80px; background: var(--green); display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+.sdg-badge-num { font-family: var(--font-display); font-size: 28px; color: var(--black); line-height: 1; }
+.sdg-badge-label { font-family: var(--font-mono); font-size: 7px; letter-spacing: 1px; text-transform: uppercase; color: rgba(8,10,14,0.7); }
+.sdg-content {}
+.sdg-title { font-family: var(--font-display); font-size: 28px; color: var(--yellow); letter-spacing: 1px; margin-bottom: 12px; }
+.sdg-desc { font-size: 14px; line-height: 1.8; color: var(--gray5); margin-bottom: 16px; }
+.sdg-watt-action { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--green); border-top: 1px solid var(--border); padding-top: 14px; }
+
+/* How it deploys */
+.deploy-section { padding: 100px 80px; background: var(--gray1); }
+.deploy-steps { display: flex; flex-direction: column; gap: 2px; margin-top: 60px; }
+.deploy-step { background: var(--gray2); padding: 36px 40px; display: grid; grid-template-columns: 60px 1fr auto; gap: 32px; align-items: center; transition: background 0.3s; }
+.deploy-step:hover { background: var(--gray3); }
+.ds-num { font-family: var(--font-display); font-size: 48px; color: rgba(0,200,83,0.2); }
+.ds-content {}
+.ds-title { font-weight: 600; font-size: 16px; margin-bottom: 6px; }
+.ds-desc { font-size: 13px; color: var(--gray5); line-height: 1.6; }
+.ds-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border: 1px solid var(--green); color: var(--green); white-space: nowrap; }
+
+/* Transparency */
+.transparency-section { padding: 100px 80px; }
+.trans-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
+.trans-card { background: var(--gray2); padding: 36px 28px; text-align: center; }
+.trans-icon { font-size: 22px; margin-bottom: 14px; }
+.trans-title { font-family: var(--font-display); font-size: 22px; color: var(--green); margin-bottom: 12px; letter-spacing: 1px; }
+.trans-desc { font-size: 14px; color: var(--gray5); line-height: 1.75; }
+
+/* Impact numbers */
+.impact-section { padding: 100px 80px; background: var(--black); }
+.impact-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; margin-top: 60px; }
+.impact-card { padding: 40px 28px; text-align: center; border-right: 1px solid var(--border); }
+.impact-card:last-child { border-right: none; }
+.ic-num { font-family: var(--font-display); font-size: 56px; color: var(--green); line-height: 1; }
+.ic-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray4); margin-top: 8px; line-height: 1.4; }
+
+/* CTA */
+.cta-section { padding: 100px 80px; text-align: center; background: var(--gray1); }
+
+@media(max-width:900px){
+  .page-hero,.mission,.fund-section,.sdg-section,.deploy-section,.transparency-section,.impact-section,.cta-section{padding-left:24px;padding-right:24px;}
+  .mission-inner{grid-template-columns:1fr;}
+  .sdg-grid{grid-template-columns:1fr;}
+  .trans-grid{grid-template-columns:1fr;}
+  .impact-grid{grid-template-columns:1fr 1fr;}
+  .deploy-step{grid-template-columns:1fr;gap:16px;}
+  .ds-badge{align-self:flex-start;}
+}
+@media(max-width:600px){
+  .sdg-card{grid-template-columns:1fr;}
+  .fund-allocation{grid-template-columns:1fr;}
+  .impact-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="grid-texture" style="position:fixed;inset:0;pointer-events:none;z-index:0;"></div>
+
+<section class="page-hero">
+  <div class="hero-glow"></div>
+  <div class="tag reveal" style="color:var(--green);">Community & SDG Impact</div>
+  <h1 class="section-title reveal">MORE THAN<br><span style="color:var(--green)">A TOKEN.</span><br><span class="ol">A MISSION.</span></h1>
+  <p style="font-size:18px;line-height:1.85;color:var(--gray5);max-width:600px;margin-top:32px;" class="reveal">733 million people have no electricity. Billions have no clean water. Millions of children study in schools with no power. $WATT Protocol permanently reserves 5% of all tokens — 50 million $WATT — to change this. On-chain. Transparent. Forever.</p>
+</section>
+
+<!-- MISSION -->
+<section class="mission">
+  <div class="mission-inner">
+    <div class="mission-quote reveal">
+      "The people who<br>suffer most from<br>the energy crisis<br>should be<br><span class="hl">first to benefit</span><br>from solving it."
+    </div>
+    <div class="mission-right reveal">
+      <p>Every major clean energy initiative in history has been designed to benefit corporations, governments, and wealthy nations first. The communities with the greatest need — in rural Africa, South Asia, and Latin America — receive the least.</p>
+      <p><strong>$WATT flips this entirely.</strong> Our Community Impact Fund ensures that the most underserved communities on Earth are not just beneficiaries of the clean energy transition — they are participants in it, earning $WATT tokens and gaining economic agency for the first time.</p>
+      <p>This isn't charity. It's a <strong>structural reallocation of value</strong> — encoded permanently into our smart contracts, governed by our community, and recorded immutably on the blockchain.</p>
+      <p>It directly aligns with five United Nations Sustainable Development Goals — making $WATT fundable by the World Bank, African Development Bank, USAID, EU Horizon, and dozens of other global grant programs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE FUND -->
+<section class="fund-section">
+  <div class="tag reveal" style="color:var(--green);">The Community Fund</div>
+  <h2 class="section-title reveal">50 MILLION<br><span style="color:var(--green)">$WATT</span><br><span class="ol">RESERVED.</span></h2>
+  <div class="fund-display reveal">
+    <div class="fund-glow"></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;"><div style="margin-bottom:16px;"><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--md"></div><div class="fund-pct">5%</div><img src="assets/img/logo/watt_logo.svg" alt="$WATT Protocol logo" class="brand-logo-img brand-logo-img--md"></div>
+    <div class="fund-of-supply">Of Total $WATT Supply · Permanently Reserved</div>
+    <div class="fund-amount">50,000,000 $WATT</div>
+    <div class="fund-amount-label">Community Impact Fund · SDG Aligned · DAO Governed</div>
+    <div class="fund-allocation">
+      <div class="fund-alloc-item">
+        <div class="fai-pct">40%</div>
+        <div class="fai-label">Clean Energy Access</div>
+      </div>
+      <div class="fund-alloc-item">
+        <div class="fai-pct">30%</div>
+        <div class="fai-label">Schools & Education</div>
+      </div>
+      <div class="fund-alloc-item">
+        <div class="fai-pct">30%</div>
+        <div class="fai-label">Clean Water Projects</div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:15px;line-height:1.85;color:var(--gray5);max-width:640px;margin:0 auto;text-align:center;" class="reveal">These allocations are not promises — they are code. Smart contracts govern every disbursement. The community votes on every grant. Every transaction is public on the blockchain. No government, no board, no executive can redirect this fund for any other purpose.</p>
+</section>
+
+<!-- SDG ALIGNMENT -->
+<section class="sdg-section">
+  <div class="tag reveal">UN SDG Alignment</div>
+  <h2 class="section-title reveal">FIVE GLOBAL<br><span class="hl">GOALS.</span><br>ONE PROTOCOL.</h2>
+  <div class="sdg-grid">
+    <div class="sdg-card reveal">
+      <div class="sdg-badge" style="background:var(--orange);">
+        <div class="sdg-badge-num">1</div>
+        <div class="sdg-badge-label">SDG</div>
+      </div>
+      <div class="sdg-content">
+        <div class="sdg-title">NO POVERTY</div>
+        <div class="sdg-desc">Communities receiving Community Fund $WATT allocations gain a new income stream tied to clean energy generation — creating wealth where none existed before. A solar panel with a WATT Meter becomes an income-generating asset for families living on under $2 a day.</div>
+        <div class="sdg-watt-action">$WATT Action: Direct token airdrops to verified low-income solar households</div>
+      </div>
+    </div>
+    <div class="sdg-card reveal">
+      <div class="sdg-badge" style="background:#c5192d;">
+        <div class="sdg-badge-num">4</div>
+        <div class="sdg-badge-label">SDG</div>
+      </div>
+      <div class="sdg-content">
+        <div class="sdg-title">QUALITY EDUCATION</div>
+        <div class="sdg-desc">30% of the Community Fund goes to schools in energy-poor areas. Solar panels installed at schools run on WATT Meters — the school earns $WATT tokens which fund operations, computers, internet access, and teacher salaries. A school with power can teach after dark.</div>
+        <div class="sdg-watt-action">$WATT Action: Grant solar + WATT Meters to schools with no electricity</div>
+      </div>
+    </div>
+    <div class="sdg-card reveal">
+      <div class="sdg-badge" style="background:#26bde2;">
+        <div class="sdg-badge-num">6</div>
+        <div class="sdg-badge-label">SDG</div>
+      </div>
+      <div class="sdg-content">
+        <div class="sdg-title">CLEAN WATER</div>
+        <div class="sdg-desc">30% of the Community Fund is directed to solar-powered water purification and pumping projects. The solar panels power the pumps AND earn $WATT — making clean water systems economically self-sustaining for the first time, without dependence on external aid.</div>
+        <div class="sdg-watt-action">$WATT Action: Fund solar-powered water pumps in waterless communities</div>
+      </div>
+    </div>
+    <div class="sdg-card reveal">
+      <div class="sdg-badge" style="background:#fcc30b;">
+        <div class="sdg-badge-num">7</div>
+        <div class="sdg-badge-label">SDG</div>
+      </div>
+      <div class="sdg-content">
+        <div class="sdg-title">AFFORDABLE CLEAN ENERGY</div>
+        <div class="sdg-desc">This is the core mission. 40% of the Community Fund installs solar panels and WATT Meters in communities with zero grid access. These households gain electricity for the first time AND earn income from it — fundamentally changing their economic reality.</div>
+        <div class="sdg-watt-action">$WATT Action: Install solar + WATT Meters in off-grid communities</div>
+      </div>
+    </div>
+    <div class="sdg-card reveal" style="grid-column:1/-1;">
+      <div class="sdg-badge" style="background:#3f7e44;">
+        <div class="sdg-badge-num">13</div>
+        <div class="sdg-badge-label">SDG</div>
+      </div>
+      <div class="sdg-content">
+        <div class="sdg-title">CLIMATE ACTION</div>
+        <div class="sdg-desc">Every kilowatt-hour verified by $WATT is a measurable, immutable, auditable contribution to global climate action. Unlike traditional carbon markets where corporations claim credits for vague offsets, $WATT data is granular, real, and independently verifiable — the kind of climate data the UNFCCC, World Bank, and UN Environment Programme actually need. This makes $WATT one of the most credible climate-aligned projects in the Web3 space.</div>
+        <div class="sdg-watt-action">$WATT Action: Every verified kWh is permanent climate action data on the blockchain</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW FUND DEPLOYS -->
+<section class="deploy-section">
+  <div class="tag reveal" style="color:var(--green);">Governance & Deployment</div>
+  <h2 class="section-title reveal">HOW THE<br><span style="color:var(--green)">FUND</span><br>DEPLOYS</h2>
+  <div class="deploy-steps">
+    <div class="deploy-step reveal">
+      <div class="ds-num">01</div>
+      <div class="ds-content">
+        <div class="ds-title">Community Identifies a Need</div>
+        <div class="ds-desc">Any $WATT token holder can submit a grant proposal — a village needing solar, a school needing power, a community needing clean water. Proposals are submitted on-chain with location data, impact metrics, and cost breakdown.</div>
+      </div>
+      <div class="ds-badge">Open to All</div>
+    </div>
+    <div class="deploy-step reveal">
+      <div class="ds-num">02</div>
+      <div class="ds-content">
+        <div class="ds-title">DAO Votes on Proposals</div>
+        <div class="ds-desc">$WATT token holders vote on which proposals to fund. Larger holdings = more voting weight. All votes are on-chain, public, and immutable. There is no committee, no board, no executive who can override the community vote.</div>
+      </div>
+      <div class="ds-badge">On-Chain Vote</div>
+    </div>
+    <div class="deploy-step reveal">
+      <div class="ds-num">03</div>
+      <div class="ds-content">
+        <div class="ds-title">Smart Contract Releases Funds</div>
+        <div class="ds-desc">Upon successful vote, the smart contract automatically releases $WATT to the project wallet. No human approval. No bank transfer delays. No corruption possible. Funds arrive in the project wallet within minutes of vote completion.</div>
+      </div>
+      <div class="ds-badge">Automatic</div>
+    </div>
+    <div class="deploy-step reveal">
+      <div class="ds-num">04</div>
+      <div class="ds-content">
+        <div class="ds-title">Impact Recorded On-Chain</div>
+        <div class="ds-desc">Once equipment is installed, the WATT Meters begin generating data on-chain. Energy produced, kWh generated, $WATT earned by the community — all publicly visible, permanently recorded, and verifiable by any grant body or donor in the world.</div>
+      </div>
+      <div class="ds-badge">Permanent Record</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSPARENCY -->
+<section class="transparency-section">
+  <div class="tag reveal">Why This is Different</div>
+  <h2 class="section-title reveal">ZERO<br><span class="hl">CORRUPTION.</span><br><span class="ol">POSSIBLE.</span></h2>
+  <div class="trans-grid">
+    <div class="trans-card reveal">
+      <div class="trans-icon"><span data-icon="blocks"></span></div>
+      <div class="trans-title">On-Chain Records</div>
+      <div class="trans-desc">Every disbursement from the Community Fund is recorded permanently on the blockchain. Any person, journalist, donor, or auditor can verify exactly what was spent and where — in real time, forever.</div>
+    </div>
+    <div class="trans-card reveal">
+      <div class="trans-icon"><span data-icon="badge-check"></span></div>
+      <div class="trans-title">Community Governed</div>
+      <div class="trans-desc">No individual, company, or government controls the fund. $WATT holders vote. Smart contracts execute. The founders cannot redirect this money — it is mathematically impossible after the contracts are deployed and locked.</div>
+    </div>
+    <div class="trans-card reveal">
+      <div class="trans-icon"><span data-icon="radio"></span></div>
+      <div class="trans-title">Live Impact Data</div>
+      <div class="trans-desc">Every WATT Meter installed with community funds generates live energy data on-chain. Grant bodies can see in real time: 47.3 kWh generated today, 47.3 $WATT earned, 12 families powered. Not a report. Live data.</div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPACT TARGETS -->
+<section class="impact-section">
+  <div class="tag reveal" style="color:var(--green);justify-content:center;">Year 3 Impact Targets</div>
+  <h2 class="section-title reveal" style="text-align:center;">WHAT 50M<br><span style="color:var(--green)">$WATT</span><br>CAN DO</h2>
+  <div class="impact-grid">
+    <div class="impact-card reveal">
+      <div class="ic-num">10K</div>
+      <div class="ic-label">Households<br>Powered</div>
+    </div>
+    <div class="impact-card reveal">
+      <div class="ic-num">500</div>
+      <div class="ic-label">Schools<br>Electrified</div>
+    </div>
+    <div class="impact-card reveal">
+      <div class="ic-num">200</div>
+      <div class="ic-label">Water Systems<br>Funded</div>
+    </div>
+    <div class="impact-card reveal">
+      <div class="ic-num">50K</div>
+      <div class="ic-label">Students<br>With Power</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="tag reveal" style="color:var(--green);justify-content:center;">Get Involved</div>
+  <h2 class="section-title reveal">BE PART<br>OF <span style="color:var(--green)">THE</span><br><span class="ol">MISSION.</span></h2>
+  <p style="font-size:16px;color:var(--gray5);max-width:480px;margin:28px auto 48px;line-height:1.85;" class="reveal">Whether you're generating clean energy, representing a community in need, or a grant body looking for transparent impact — $WATT was built for you.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
+    <a href="index.html#waitlist" class="btn btn-primary"><span data-icon="zap"></span><span style="margin-left:10px;">Join the Waitlist</span></a>
+    <a href="whitepaper.html" class="btn btn-outline">Read the Whitepaper <span data-icon="arrow-right" style="margin-left:10px;"></span></a>
+  </div>
+</section>
+
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+</body>
+</html>

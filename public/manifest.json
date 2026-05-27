@@ -1,0 +1,43 @@
+{
+  "name": "$WATT Protocol — Energy to Earn",
+  "short_name": "$WATT",
+  "description": "A decentralized protocol rewarding individuals worldwide for generating renewable energy. Born in Africa. Built for the World.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#f5e642",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "My Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your waitlist position and earned $WATT",
+      "url": "/dashboard.html",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Join Waitlist",
+      "short_name": "Join",
+      "description": "Join the $WATT Protocol waitlist",
+      "url": "/#waitlist",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

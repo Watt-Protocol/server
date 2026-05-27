@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Your $WATT Protocol dashboard — view your waitlist position, referrals, and earned $WATT tokens.">
+<title>My Dashboard — $WATT Protocol</title>
+<!-- Open Graph -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="$WATT Protocol">
+<meta property="og:title"       content="My $WATT Dashboard">
+<meta property="og:description" content="View your waitlist position, referral count, and $WATT tokens earned. Join the global clean energy revolution.">
+<meta property="og:url"         content="/dashboard.html">
+<meta property="og:image"       content="/og-image.png">
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@WATTProtocol">
+<meta name="twitter:title"       content="My $WATT Dashboard">
+<meta name="twitter:description" content="View your waitlist position, referrals, and $WATT tokens earned.">
+<meta name="twitter:image"       content="/og-image.png">
+<link rel="canonical" href="/dashboard.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5e642">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="$WATT">
+<link rel="stylesheet" href="shared.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<style>
+
+.db-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 120px 24px 100px;
+}
+
+/* ── Loading ── */
+.db-loading {
+  text-align: center;
+  padding: 140px 24px;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 2px solid var(--border);
+  border-top-color: var(--yellow);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.db-loading p {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gray4);
+}
+
+/* ── Resend / access form ── */
+#dashboardResend { max-width: 520px; margin: 60px auto 0; text-align: center; }
+.resend-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--yellow);
+  border: 1px solid var(--border); padding: 6px 14px; margin-bottom: 24px;
+}
+.resend-title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 0.92; margin-bottom: 16px;
+}
+.resend-body { font-size: 14px; color: var(--gray5); line-height: 1.8; margin-bottom: 32px; }
+.resend-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.resend-form input {
+  background: var(--gray1);
+  border: 1px solid var(--border);
+  padding: 15px 18px; color: var(--white);
+  font-family: var(--font-mono); font-size: 13px; outline: none;
+}
+.resend-form input::placeholder { color: var(--gray4); }
+.resend-form input:focus { border: none; outline: none; }
+.resend-form button {
+  background: var(--yellow); color: var(--black);
+  border: none; padding: 15px 24px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  width: 100%;
+}
+.resend-form button:hover { background: var(--orange); color: var(--white); }
+.resend-form button:disabled { opacity: 0.6; }
+#resendNote {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray4);
+}
+.resend-divider {
+  margin: 32px 0; border: none; border-top: 1px solid var(--border);
+}
+.resend-join { font-size: 13px; color: var(--gray4); }
+.resend-join a { color: var(--yellow); }
+
+.auth-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.74);
+  backdrop-filter: blur(4px);
+  padding: 24px;
+  z-index: 4000;
+}
+.auth-modal {
+  width: min(100%, 460px);
+  background: var(--gray1);
+  border: 1px solid var(--border);
+  padding: 28px 24px 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+.auth-modal-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 12px;
+}
+.auth-modal-title {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.auth-modal-body {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--gray5);
+  margin-bottom: 20px;
+}
+.auth-modal-btn {
+  width: 100%;
+  border: none;
+  background: var(--yellow);
+  color: var(--black);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  cursor: pointer;
+}
+
+/* ── Dashboard hero ── */
+.db-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--yellow);
+  border: 1px solid var(--border); padding: 6px 14px; margin-bottom: 20px;
+}
+.db-tag .dot {
+  width: 6px; height: 6px; background: var(--yellow);
+  border-radius: 50%; animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+.db-title {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 8vw, 100px);
+  line-height: 0.9; margin-bottom: 14px;
+}
+.db-subtitle { font-size: 15px; color: var(--gray5); line-height: 1.75; margin-bottom: 6px; }
+.db-meta { font-family: var(--font-mono); font-size: 10px; color: var(--gray4); letter-spacing: 0.1em; }
+
+/* ── Founding member banner ── */
+.founding-banner {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: linear-gradient(135deg, #141100 0%, #0c0c00 100%);
+  border: 1px solid var(--yellow); padding: 22px 26px; margin: 32px 0;
+}
+.founding-icon { font-size: 32px; flex-shrink: 0; padding-top: 2px; display:flex; align-items:center; justify-content:center; }
+.founding-text strong {
+  display: block; font-family: var(--font-mono);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.25em;
+  color: var(--yellow); text-transform: uppercase; margin-bottom: 6px;
+}
+.founding-text p { font-size: 13px; color: var(--gray5); line-height: 1.7; margin: 0; }
+
+/* ── Stats grid ── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin: 32px 0;
+}
+@media (max-width: 680px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.stat-card {
+  background: var(--gray1); padding: 24px 20px; position: relative;
+}
+.stat-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; width: 3px; height: 100%; background: var(--gray3);
+}
+.stat-card.yellow::before { background: var(--yellow); }
+.stat-card.green::before  { background: var(--green); }
+.stat-card.orange::before { background: var(--orange); }
+
+.stat-label {
+  display: block; font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gray4); margin-bottom: 10px;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1; color: var(--white);
+}
+.stat-card.yellow .stat-value { color: var(--yellow); }
+.stat-card.green  .stat-value { color: var(--green); }
+.stat-sub { font-size: 11px; color: var(--gray4); margin-top: 7px; font-family: var(--font-mono); }
+
+/* ── Position bar ── */
+.pos-section {
+  background: var(--gray1); border: 1px solid var(--border); padding: 26px; margin-bottom: 24px;
+}
+.pos-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.pos-header span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray4); }
+.pos-header strong { font-family: var(--font-mono); font-size: 11px; color: var(--yellow); }
+.progress-track { height: 3px; background: var(--gray3); }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--yellow), var(--orange)); transition: width 1.2s ease; }
+.pos-note { font-size: 11px; color: var(--gray4); margin-top: 12px; font-family: var(--font-mono); line-height: 1.6; }
+
+/* ── Two-col layout ── */
+.db-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media (max-width: 640px) { .db-two-col { grid-template-columns: 1fr; } }
+
+/* ── Panel ── */
+.panel {
+  background: var(--gray1); border: 1px solid var(--border); padding: 26px;
+}
+.panel-label {
+  display: block; font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--yellow); margin-bottom: 6px;
+}
+.panel-desc { font-size: 12px; color: var(--gray5); line-height: 1.7; margin-bottom: 20px; }
+
+/* Referral link box */
+.ref-box { display: flex; border: 1px solid var(--border); margin-bottom: 14px; }
+.ref-box span {
+  flex: 1; padding: 12px 14px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--yellow);
+  background: var(--black); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ref-box button {
+  background: var(--gray2); border: none; border-left: 1px solid var(--border);
+  color: var(--white); padding: 12px 18px;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+.ref-box button:hover { background: var(--yellow); color: var(--black); }
+.ref-box button.copied { background: var(--green); color: var(--black); }
+
+.share-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.share-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--gray5); padding: 9px 14px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.share-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+
+/* Perk list */
+.perk-list { list-style: none; margin: 0; padding: 0; }
+.perk-list li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px; color: var(--gray5); line-height: 1.6;
+}
+.perk-list li:last-child { border-bottom: none; padding-bottom: 0; }
+.perk-icon {
+  font-size: 14px; flex-shrink: 0; margin-top: 1px;
+  width: 22px; text-align: center; display:flex; align-items:center; justify-content:center;
+}
+.perk-name { font-weight: 700; color: var(--white); display: block; margin-bottom: 2px; font-size: 12px; }
+
+/* Account info */
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.info-key { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray4); }
+.info-val { font-family: var(--font-mono); font-size: 11px; color: var(--white); text-align: right; }
+.info-val.green { color: var(--green); }
+.info-val.yellow { color: var(--yellow); }
+
+/* Roadmap */
+.roadmap-panel { background: var(--gray1); border: 1px solid var(--border); margin-bottom: 24px; }
+.roadmap-header { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+.roadmap-header span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--yellow); }
+.roadmap-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 15px 24px; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.roadmap-row:last-child { border-bottom: none; }
+.rm-num {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  padding: 5px 9px; min-width: 32px; text-align: center; flex-shrink: 0;
+  background: var(--gray3); color: var(--gray4);
+}
+.rm-num.done  { background: var(--green);  color: var(--black); }
+.rm-num.now   { background: var(--yellow); color: var(--black); }
+.rm-body { flex: 1; }
+.rm-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 2px; }
+.rm-desc  { font-size: 11px; color: var(--gray4); line-height: 1.5; }
+.rm-time  { font-family: var(--font-mono); font-size: 10px; color: var(--gray4); flex-shrink: 0; }
+
+/* Community links */
+.community-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0; }
+.comm-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gray2); border: 1px solid var(--border);
+  color: var(--gray5); padding: 10px 16px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+.comm-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+
+/* Footer note */
+.db-footer {
+  margin-top: 48px; padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 10px;
+  color: var(--gray4); line-height: 1.9;
+}
+.db-footer a { color: var(--gray4); text-decoration: underline; }
+
+/* hide until loaded */
+#dashboardMain, #dashboardResend { display: none; }
+</style>
+</head>
+<body>
+
+<div class="db-wrap">
+
+  <!-- ── Loading ── -->
+  <div class="db-loading" id="dashboardLoading">
+    <div class="spinner"></div>
+    <p>Loading your dashboard...</p>
+  </div>
+
+  <!-- ── Main dashboard ── -->
+  <div id="dashboardMain">
+
+    <!-- Hero -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="db-tag"><span class="dot"></span> Live Dashboard</div>
+      <button onclick="logoutDashboard()" style="background:none;border:1px solid var(--border);color:var(--gray4);font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:6px 14px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--red)';this.style.color='var(--red)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--gray4)'"><span data-icon="arrow-left"></span><span style="margin-left:8px;">Logout</span></button>
+    </div>
+    <h1 class="db-title">WELCOME<br><span style="color:var(--yellow)">EARNER.</span></h1>
+    <p class="db-subtitle" id="dbSubtitle"></p>
+    <p class="db-meta" id="dbMeta"></p>
+
+    <!-- Founding member banner -->
+    <div class="founding-banner" id="foundingBanner" style="display:none">
+      <div class="founding-icon"><span data-icon="crown"></span></div>
+      <div class="founding-text">
+        <strong>Founding Member — Permanently On-Chain</strong>
+        <p>You are in the first 1,000 signups. Your Founding Member status is locked forever. You earn <strong style="color:var(--yellow)">1.5 $WATT per KWh</strong> (vs 1× for standard users), get priority hardware allocation, and will receive a Founding Member NFT badge at launch.</p>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card yellow">
+        <span class="stat-label">Waitlist Position</span>
+        <div class="stat-value" id="statPosition">—</div>
+        <div class="stat-sub" id="statTotal"></div>
+      </div>
+      <div class="stat-card green">
+        <span class="stat-label">$WATT Earned</span>
+        <div class="stat-value" id="statWatt">0</div>
+        <div class="stat-sub">from referrals so far</div>
+      </div>
+      <div class="stat-card orange">
+        <span class="stat-label">Friends Referred</span>
+        <div class="stat-value" id="statReferrals">0</div>
+        <div class="stat-sub">× 500 $WATT each</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Earning Multiplier</span>
+        <div class="stat-value" id="statMultiplier">1×</div>
+        <div class="stat-sub">at mainnet launch</div>
+      </div>
+    </div>
+
+    <!-- Position progress -->
+    <div class="pos-section">
+      <div class="pos-header">
+        <span>Founding Member Slots</span>
+        <strong id="posText">— / 1,000</strong>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <p class="pos-note">The first 1,000 waitlist members are Founding Members — locked in for 1.5× earning multiplier, priority hardware, and an on-chain NFT badge.</p>
+    </div>
+
+    <!-- Referral + Perks row -->
+    <div class="db-two-col">
+
+      <!-- Referral link panel -->
+      <div class="panel cv-auto-light">
+        <span class="panel-label">Your Referral Link</span>
+        <p class="panel-desc">Every person who signs up using your link and installs a WATT Meter earns you <strong style="color:var(--yellow)">500 $WATT</strong> at launch. No limit.</p>
+        <div class="ref-box">
+          <span id="refLinkDisplay"></span>
+          <button id="copyBtn" onclick="copyLink()">Copy</button>
+        </div>
+        <div class="share-row">
+          <a class="share-btn" id="shareX" href="https://twitter.com/intent/tweet?text=Join%20me%20on%20%24WATT%20Protocol" target="_blank" rel="noopener"><span data-icon="twitter"></span><span>Share on X</span></a>
+          <a class="share-btn" id="shareWa" href="https://wa.me/?text=Join%20me%20on%20%24WATT%20Protocol" target="_blank" rel="noopener"><span data-icon="whatsapp"></span><span>WhatsApp</span></a>
+        </div>
+
+        <!-- QR Code -->
+        <div id="qrWrap" style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:flex;align-items:center;gap:20px;">
+          <div id="qrCanvas" style="background:#fff;padding:8px;flex-shrink:0;width:100px;height:100px;display:flex;align-items:center;justify-content:center;">
+            <span style="font-size:10px;color:#999;font-family:var(--font-mono);">Loading…</span>
+          </div>
+          <div>
+            <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray4);margin-bottom:6px;">Scan to Share</div>
+            <p style="font-size:12px;color:var(--gray5);line-height:1.6;margin:0;">Show this QR code to anyone — scanning it opens your referral link directly on their phone.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Perks panel -->
+      <div class="panel cv-auto-light">
+        <span class="panel-label">Your Perks</span>
+        <ul class="perk-list" id="perkList">
+          <!-- populated by JS -->
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Account info + Community row -->
+    <div class="db-two-col">
+
+      <!-- Account info -->
+      <div class="panel cv-auto-light">
+        <span class="panel-label">Account Details</span>
+        <div class="info-row">
+          <span class="info-key">Email</span>
+          <span class="info-val" id="infoEmail">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Referral Code</span>
+          <span class="info-val yellow" id="infoCode">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Joined</span>
+          <span class="info-val" id="infoJoined">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Status</span>
+          <span class="info-val green" id="infoStatus">Active</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Founding Member</span>
+          <span class="info-val" id="infoFounding">—</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Referrals Count</span>
+          <span class="info-val" id="infoRefCount">0</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">$WATT from Referrals</span>
+          <span class="info-val yellow" id="infoWatt">0</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Blockchain</span>
+          <span class="info-val">Base (Ethereum L2)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Token Standard</span>
+          <span class="info-val">ERC-20</span>
+        </div>
+      </div>
+
+      <!-- Community panel -->
+      <div class="panel cv-auto-light">
+        <span class="panel-label">Join the Movement</span>
+        <p class="panel-desc">Get build updates, talk directly to the founding team, and be first to know about hardware shipping dates.</p>
+        <div class="community-row">
+          <a class="comm-btn" href="https://twitter.com/WATTProtocol" target="_blank" rel="noopener"><span data-icon="twitter"></span><span>Follow on X</span></a>
+          <a class="comm-btn" href="whitepaper.html"><span data-icon="file-text"></span><span>Whitepaper</span></a>
+          <a class="comm-btn" href="how-it-works.html"><span data-icon="zap"></span><span>How It Works</span></a>
+          <a class="comm-btn" href="token.html"><span data-icon="coins"></span><span>Token</span></a>
+          <a class="comm-btn" href="index.html#waitlist"><span data-icon="user-plus"></span><span>Refer a Friend</span></a>
+        </div>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+          <span class="panel-label" style="margin-bottom:12px;">Session</span>
+          <button onclick="logoutDashboard()" id="switchBtn"
+            style="background:var(--gray2);border:1px solid var(--border);color:var(--white);padding:11px 16px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;transition:background 0.15s,color 0.15s;cursor:pointer;"
+            onmouseover="this.style.background='var(--yellow)';this.style.color='var(--black)'"
+            onmouseout="this.style.background='var(--gray2)';this.style.color='var(--white)'">
+            Sign Out
+          </button>
+          <p id="switchNote" style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray4);margin-top:10px;">Use your email and password to open another dashboard.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Roadmap -->
+    <div class="roadmap-panel cv-auto-light">
+      <div class="roadmap-header"><span>Launch Roadmap — Where We Are</span></div>
+      <div id="roadmapRows"><!-- rendered by JS --></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="db-footer">
+      $WATT Protocol &nbsp;·&nbsp; wattprotocol.io &nbsp;·&nbsp; hello@wattprotocol.io<br>
+      $WATT is a utility token. This is not financial or investment advice.<br>
+      <a href="index.html"><span data-icon="arrow-left"></span><span style="margin-left:8px;">Back to Home</span></a>
+      &nbsp;·&nbsp;
+      <a href="mailto:hello@wattprotocol.io">Contact</a>
+    </div>
+
+  </div><!-- /#dashboardMain -->
+
+  <!-- ── Sign in / reset ── -->
+  <div id="dashboardResend">
+    <div class="resend-tag"><span data-icon="shield-check"></span><span style="margin-left:8px;">Dashboard Access</span></div>
+    <h1 class="resend-title">VIEW YOUR<br><span style="color:var(--yellow)">DASHBOARD.</span></h1>
+    <p class="resend-body" id="authIntro">Sign in with the email and password you used when joining the waitlist.</p>
+
+    <div class="resend-form">
+      <input type="email" id="resendEmail" placeholder="your@email.com">
+      <input type="password" id="resendPassword" placeholder="your password">
+      <input type="text" id="forgotWebsite" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+      <button id="resendBtn" onclick="loginDashboard()">Sign In <span data-icon="arrow-right" style="margin-left:8px;"></span></button>
+    </div>
+    <div class="resend-form" id="resetForm" style="display:none;margin-top:12px;">
+      <input type="password" id="resetPassword" placeholder="new password (min 8 chars)">
+      <input type="password" id="resetPasswordConfirm" placeholder="confirm new password">
+      <button id="resetBtn" onclick="resetPassword()">Reset Password <span data-icon="arrow-right" style="margin-left:8px;"></span></button>
+    </div>
+    <p id="resendNote"></p>
+    <p class="resend-join" style="margin-top:14px;"><button type="button" onclick="forgotPassword(event)" style="background:none;border:none;padding:0;color:inherit;text-decoration:underline;font:inherit;cursor:pointer;">Forgot your password?</button></p>
+
+    <hr class="resend-divider">
+    <p class="resend-join">Not on the waitlist yet? <a href="index.html#waitlist">Join now — it's free →</a></p>
+  </div>
+
+  <div class="auth-modal-backdrop" id="resetSentModal">
+    <div class="auth-modal">
+      <div class="auth-modal-tag">Password Reset</div>
+      <h2 class="auth-modal-title">Check your email.</h2>
+      <p class="auth-modal-body" id="resetSentModalMessage">If that account exists, we just sent a secure reset link. Please check your inbox and spam folder before requesting another one.</p>
+      <button class="auth-modal-btn" type="button" onclick="closeResetSentModal()">Okay</button>
+    </div>
+  </div>
+
+</div><!-- /.db-wrap -->
+
+<!-- shared.js MUST be at end of body so footer inserts after all content -->
+<script src="icons.js"></script>
+<script src="shared.js"></script>
+<script>
+const API = window.WATT_API_BASE || document.documentElement.dataset.apiBase || '';
+let resetToken = '';
+let resetCooldownUntil = 0;
+const scheduleDashboardNonCritical = (fn) => {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(() => fn(), { timeout: 700 });
+    return;
+  }
+  window.setTimeout(fn, 1);
+};
+
+// ── Roadmap ───────────────────────────────────────────────────────────────
+const DEFAULT_ROADMAP = [
+  { title: 'Foundation — Waitlist & Community',            desc: 'Global waitlist live. X launch. Co-founder search underway.',                                    timeline: 'Now (done)',      status: 'done'     },
+  { title: 'Prototype — WATT Smart Meter + Base Testnet',  desc: 'First WATT Meter built. Energy data committed on-chain every 15 min.',                           timeline: 'Month 3–4',  status: 'current'  },
+  { title: 'Africa Pilot — Nigeria & Ghana',               desc: '20–50 meters live. First $WATT tokens minted from real solar energy.',                           timeline: 'Month 5–6',  status: 'upcoming' },
+  { title: 'Grant Funding',                                desc: 'Ethereum Foundation, World Bank, EU Horizon applications.',                                       timeline: 'Month 6–9',  status: 'upcoming' },
+  { title: 'Asia Expansion — India, Indonesia, Philippines',desc: 'Fastest growing solar markets globally. Regional pilots launch.',                               timeline: 'Month 9–15', status: 'upcoming' },
+  { title: 'Mainnet Launch — $WATT Live on Base + Uniswap',desc: '$WATT tradeable globally. Carbon credit marketplace opens. Founding Member NFTs minted.',        timeline: 'Month 12–18',status: 'upcoming' },
+  { title: 'Protocol Scale — 1M+ Active Meters Worldwide', desc: 'Series A ($5M–$20M). White-label licensing to national utilities.',                              timeline: 'Year 2–3',   status: 'upcoming' },
+];
+
+function renderDashboardRoadmap(stages) {
+  const container = document.getElementById('roadmapRows');
+  if (!container || !stages.length) return;
+  container.replaceChildren(...stages.map((s, i) => {
+    const row = document.createElement('div');
+    const num = document.createElement('div');
+    const body = document.createElement('div');
+    const title = document.createElement('div');
+    const time = document.createElement('span');
+
+    row.className = 'roadmap-row';
+    num.className = `rm-num ${s.status === 'done' ? 'done' : s.status === 'current' ? 'now' : ''}`.trim();
+    num.textContent = s.status === 'done' ? 'Done' : String(i + 1).padStart(2, '0');
+    body.className = 'rm-body';
+    title.className = 'rm-title';
+    title.textContent = s.title || '';
+    time.className = 'rm-time';
+    time.textContent = s.timeline || '';
+    if (s.status === 'done') time.style.color = 'var(--green)';
+    if (s.status === 'current') time.style.color = 'var(--yellow)';
+    body.appendChild(title);
+    if (s.desc) {
+      const desc = document.createElement('div');
+      desc.className = 'rm-desc';
+      desc.textContent = s.desc;
+      body.appendChild(desc);
+    }
+    row.append(num, body, time);
+    return row;
+  }));
+}
+
+(async function loadRoadmap() {
+  try {
+    const r = await fetch(`${API}/api/roadmap`);
+    if (r.ok) {
+      const data = await r.json();
+      if (data.stages && data.stages.length) {
+        renderDashboardRoadmap(data.stages);
+        return;
+      }
+    }
+  } catch {}
+  renderDashboardRoadmap(DEFAULT_ROADMAP);
+})();
+
+// ── Populate all dashboard UI from a data object ──────────────────────────
+function renderDashboard(data) {
+  const loading = document.getElementById('dashboardLoading');
+  const resend  = document.getElementById('dashboardResend');
+  const main    = document.getElementById('dashboardMain');
+
+  const joined = new Date(data.signedUpAt);
+
+  document.getElementById('dbSubtitle').textContent =
+    `You are #${data.position.toLocaleString()} on the global $WATT waitlist — signed up as ${data.email}`;
+  document.getElementById('dbMeta').textContent =
+    `Joined ${joined.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' })}` +
+    (data.foundingMember ? '  ·  Founding Member' : '');
+
+  document.getElementById('statPosition').textContent   = `#${data.position.toLocaleString()}`;
+  document.getElementById('statTotal').textContent      = `of ${data.total.toLocaleString()} total`;
+  document.getElementById('statWatt').textContent       = data.wattEarned.toLocaleString();
+  document.getElementById('statReferrals').textContent  = data.referralsCount;
+  document.getElementById('statMultiplier').textContent = (data.multiplier || (data.foundingMember ? 1.5 : 1)) + '×';
+
+  const slots = Math.min(data.position, 1000);
+  document.getElementById('progressFill').style.width = Math.min(100, (slots / 1000) * 100) + '%';
+  document.getElementById('posText').textContent      = `${slots.toLocaleString()} / 1,000`;
+
+  if (data.foundingMember) {
+    document.getElementById('foundingBanner').style.display = 'flex';
+  }
+
+  const perks = [
+    {
+      icon: 'package', active: data.foundingMember,
+      name: 'Priority Hardware Allocation',
+      desc: 'First to receive the WATT Smart Meter when units ship — no waiting in the general queue.',
+    },
+    {
+      icon: 'zap', active: true,
+      name: data.foundingMember ? `${data.multiplier || 1.5}× Earning Multiplier` : '1× Standard Earning Rate',
+      desc: data.foundingMember
+        ? `Earn ${data.multiplier || 1.5} $WATT per KWh for your first 90 days — more than standard users.`
+        : 'Standard rate: 1 $WATT per verified KWh. Upgrade to Founding Member by joining earlier.',
+    },
+    {
+      icon: 'link', active: true,
+      name: `Referral Rewards — ${(data.referralReward || 500).toLocaleString()} $WATT per install`,
+      desc: `Share your link. Every friend who installs a WATT Meter earns you ${(data.referralReward || 500).toLocaleString()} $WATT. You've referred ${data.referralsCount} ${data.referralsCount === 1 ? 'person' : 'people'} — that's ${data.wattEarned.toLocaleString()} $WATT so far.`,
+    },
+    {
+      icon: 'award', active: data.foundingMember,
+      name: 'Founding Member NFT Badge',
+      desc: data.foundingMember
+        ? 'A permanent on-chain record of your early belief — minted at mainnet launch, free to you.'
+        : 'Only available to the first 1,000 members. Slots are limited.',
+    },
+    {
+      icon: 'message-circle', active: data.foundingMember,
+      name: 'Direct Access to Founding Team',
+      desc: 'Private community channel with weekly build-in-public updates straight from the founders.',
+    },
+  ];
+
+  const perkList = document.getElementById('perkList');
+  perkList.replaceChildren(...perks.map((p) => {
+    const li = document.createElement('li');
+    const icon = document.createElement('span');
+    const wrap = document.createElement('div');
+    const name = document.createElement('span');
+
+    icon.className = 'perk-icon';
+    icon.innerHTML = window.wattIconMarkup
+      ? window.wattIconMarkup(p.active ? p.icon : 'lock', p.name)
+      : '';
+    name.className = 'perk-name';
+    name.style.color = p.active ? '#fff' : 'var(--gray4)';
+    name.textContent = p.name;
+    wrap.appendChild(name);
+    wrap.appendChild(document.createTextNode(` ${p.desc}`));
+    li.append(icon, wrap);
+    return li;
+  }));
+
+  document.getElementById('infoEmail').textContent    = data.email;
+  document.getElementById('infoCode').textContent     = data.referralCode;
+  document.getElementById('infoJoined').textContent   =
+    joined.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  const foundingInfo = document.getElementById('infoFounding');
+  foundingInfo.textContent = data.foundingMember ? `Yes — #${data.position}` : 'No';
+  foundingInfo.style.color = data.foundingMember ? 'var(--yellow)' : 'var(--gray4)';
+  document.getElementById('infoRefCount').textContent = data.referralsCount;
+  document.getElementById('infoWatt').textContent     = data.wattEarned.toLocaleString() + ' $WATT';
+
+  window._refLink = data.referralLink;
+  document.getElementById('refLinkDisplay').textContent = data.referralLink;
+
+  scheduleDashboardNonCritical(() => {
+    const qrEl = document.getElementById('qrCanvas');
+    if (!qrEl) return;
+    qrEl.replaceChildren();
+    if (typeof QRCode !== 'undefined') {
+      new QRCode(qrEl, { text: data.referralLink, width: 84, height: 84, colorDark: '#080808', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+      return;
+    }
+    const img = document.createElement('img');
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=84x84&data=${encodeURIComponent(data.referralLink)}`;
+    img.alt = 'QR code';
+    img.width = 84;
+    img.height = 84;
+    qrEl.appendChild(img);
+  });
+
+  const tweet = encodeURIComponent(
+    `I just joined the $WATT Protocol waitlist.\n\nEnergy to Earn — 1 KWh = 1 $WATT token. Automatically. No middleman.\nBorn in Africa. Built for the World.\n\n${data.referralLink}`
+  );
+  document.getElementById('shareX').href  = `https://twitter.com/intent/tweet?text=${tweet}`;
+  document.getElementById('shareWa').href = `https://wa.me/?text=${encodeURIComponent('Join me on $WATT Protocol — 1 KWh = 1 $WATT ' + data.referralLink)}`;
+
+  loading.style.display = 'none';
+  resend.style.display  = 'none';
+  main.style.display    = 'block';
+
+  // Update URL without reload so bookmark/share works
+  history.replaceState(null, '', 'dashboard.html');
+}
+
+function showAuth(note = '') {
+  document.getElementById('dashboardMain').style.display = 'none';
+  document.getElementById('dashboardLoading').style.display = 'none';
+  document.getElementById('dashboardResend').style.display = 'block';
+  document.getElementById('resetForm').style.display = 'none';
+  document.getElementById('resendPassword').style.display = '';
+  document.getElementById('resendBtn').style.display = '';
+  document.getElementById('authIntro').textContent = 'Sign in with the email and password you used when joining the waitlist.';
+  document.getElementById('resendNote').textContent = note;
+  document.getElementById('resendNote').style.color = note ? '#ff4444' : '';
+  document.getElementById('resendEmail').focus();
+}
+
+function showResetForm(message = '') {
+  document.getElementById('dashboardLoading').style.display = 'none';
+  document.getElementById('dashboardMain').style.display = 'none';
+  document.getElementById('dashboardResend').style.display = 'block';
+  document.getElementById('authIntro').textContent = 'Choose a new password to finish resetting your account.';
+  document.getElementById('resetForm').style.display = 'flex';
+  document.getElementById('resendPassword').style.display = 'none';
+  document.getElementById('resendBtn').style.display = 'none';
+  document.getElementById('resendNote').textContent = message;
+  document.getElementById('resendNote').style.color = message ? '#ff4444' : '';
+}
+
+function openResetSentModal(message) {
+  document.getElementById('resetSentModalMessage').textContent = message;
+  document.getElementById('resetSentModal').style.display = 'flex';
+}
+
+function closeResetSentModal() {
+  document.getElementById('resetSentModal').style.display = 'none';
+}
+
+async function validateResetToken(token) {
+  const res = await fetch(`${API}/api/auth/reset-password-status?token=${encodeURIComponent(token)}`);
+  const data = await res.json();
+  if (!res.ok || !data.valid) {
+    throw new Error(data.error || 'This reset link is invalid or expired.');
+  }
+}
+
+async function loadDashboard(ref = '') {
+  const res = await fetch(ref ? `${API}/api/me?ref=${encodeURIComponent(ref)}` : `${API}/api/me`);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Could not load dashboard.');
+  renderDashboard(data);
+}
+
+(async function () {
+  const params  = new URLSearchParams(window.location.search);
+  const ref     = params.get('ref');
+  const email   = params.get('email');
+  resetToken = params.get('reset') || '';
+  if (email) document.getElementById('resendEmail').value = decodeURIComponent(email);
+  if (resetToken) {
+    try {
+      await validateResetToken(resetToken);
+      showResetForm('');
+      document.getElementById('resetPassword').focus();
+      return;
+    } catch (err) {
+      resetToken = '';
+      history.replaceState(null, '', 'dashboard.html');
+      showAuth(err.message || 'This reset link is invalid or expired.');
+      return;
+    }
+  }
+
+  try {
+    await loadDashboard(ref || '');
+  } catch (err) {
+    showAuth(err.message || '');
+  }
+})();
+
+async function loginDashboard() {
+  const emailEl = document.getElementById('resendEmail');
+  const passwordEl = document.getElementById('resendPassword');
+  const btnEl = document.getElementById('resendBtn');
+  const noteEl = document.getElementById('resendNote');
+  const email = emailEl.value.trim();
+  const password = passwordEl.value;
+
+  noteEl.style.color = '';
+  noteEl.textContent = '';
+
+  if (!email || !password) {
+    noteEl.textContent = 'Enter your email and password.';
+    noteEl.style.color = '#ff4444';
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    noteEl.textContent = 'Please enter a valid email address.';
+    noteEl.style.color = '#ff4444';
+    return;
+  }
+
+  const orig        = btnEl.textContent;
+  btnEl.textContent = 'Loading...';
+  btnEl.disabled    = true;
+
+  try {
+    const res  = await fetch(`${API}/api/auth/login`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      noteEl.textContent = data.error || 'No account found.';
+      noteEl.style.color = '#ff4444';
+      btnEl.textContent  = orig;
+      btnEl.disabled     = false;
+      return;
+    }
+
+    await loadDashboard();
+    btnEl.textContent  = orig;
+    btnEl.disabled     = false;
+    noteEl.textContent = '';
+  } catch {
+    noteEl.textContent = 'Could not connect. Is the server running?';
+    noteEl.style.color = '#ff4444';
+    btnEl.textContent  = orig;
+    btnEl.disabled     = false;
+  }
+}
+
+async function forgotPassword(event) {
+  if (event) event.preventDefault();
+  const email = document.getElementById('resendEmail').value.trim();
+  const noteEl = document.getElementById('resendNote');
+  if (Date.now() < resetCooldownUntil) {
+    openResetSentModal('A reset link was already requested recently. Please check your inbox and spam folder before trying again.');
+    return;
+  }
+  if (!email) {
+    noteEl.textContent = 'Enter your email first and then request a reset link.';
+    noteEl.style.color = '#ff4444';
+    return;
+  }
+  try {
+    const res = await fetch(`${API}/api/auth/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, website: document.getElementById('forgotWebsite').value }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not send reset link.');
+    resetCooldownUntil = Date.now() + 60_000;
+    noteEl.textContent = 'If that account exists, a reset link is on the way. Check your inbox and spam folder.';
+    noteEl.style.color = 'var(--yellow)';
+    openResetSentModal('If that account exists, we just sent a secure reset link. Please check your inbox and spam folder, and wait a minute before requesting another one.');
+  } catch (err) {
+    noteEl.textContent = err.message || 'Could not send reset link.';
+    noteEl.style.color = '#ff4444';
+  }
+}
+
+async function resetPassword() {
+  const password = document.getElementById('resetPassword').value;
+  const confirmPassword = document.getElementById('resetPasswordConfirm').value;
+  const noteEl = document.getElementById('resendNote');
+  const btnEl = document.getElementById('resetBtn');
+  if (!password || password.length < 8) {
+    noteEl.textContent = 'Use at least 8 characters for your new password.';
+    noteEl.style.color = '#ff4444';
+    return;
+  }
+  if (password !== confirmPassword) {
+    noteEl.textContent = 'Your password confirmation does not match.';
+    noteEl.style.color = '#ff4444';
+    return;
+  }
+  const orig = btnEl.textContent;
+  btnEl.disabled = true;
+  btnEl.textContent = 'Resetting...';
+  try {
+    const res = await fetch(`${API}/api/auth/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: resetToken, password, confirmPassword }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Password reset failed.');
+    resetToken = '';
+    history.replaceState(null, '', 'dashboard.html');
+    document.getElementById('resetPassword').value = '';
+    document.getElementById('resetPasswordConfirm').value = '';
+    document.getElementById('resendPassword').value = '';
+    document.getElementById('resendEmail').focus();
+    showAuth(data.message || 'Your password has been reset. Please sign in with your new password.');
+    document.getElementById('resendNote').style.color = 'var(--yellow)';
+  } catch (err) {
+    noteEl.textContent = err.message || 'Password reset failed.';
+    noteEl.style.color = '#ff4444';
+  } finally {
+    btnEl.disabled = false;
+    btnEl.textContent = orig;
+  }
+}
+
+async function logoutDashboard() {
+  await fetch(`${API}/api/auth/logout`, { method: 'POST' }).catch(() => {});
+  document.getElementById('resendPassword').value = '';
+  document.getElementById('resetPassword').value = '';
+  document.getElementById('resetPasswordConfirm').value = '';
+  showAuth('');
+}
+
+function copyLink() {
+  if (!window._refLink) return;
+  navigator.clipboard.writeText(window._refLink).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2200);
+  });
+}
+
+document.getElementById('resetSentModal').addEventListener('click', function(event) {
+  if (event.target === this) closeResetSentModal();
+});
+</script>
+</body>
+</html>
